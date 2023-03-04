@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 // import { Cors } from "@/lib/cors";
-import prisma from "@/lib/prismadb";
-import type { NextApiRequest, NextApiResponse } from "next";
+import client from "@/lib/prismadb";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { Configuration, OpenAIApi } from "openai";
@@ -35,10 +34,10 @@ export async function POST(request: Request) {
       max_tokens: 800,
     });
 
-    const user = await prisma.user.findUnique({
+    const user = await client.user.findUnique({
       where: { email },
     });
-    await prisma.chat.create({
+    await client.chat.create({
       data: {
         message: body.question,
         session: body.chatSession,
@@ -58,10 +57,11 @@ export async function GET(request: Request) {
   const {
     user: { email },
   } = (await getServerSession(authOptions)) as UserSession;
-  const chat = await prisma.user.findUnique({
+
+  const chat = await client.user.findUnique({
     where: { email },
     select: {
-      chat: {
+      Chat: {
         orderBy: {
           session: "desc",
         },
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
       },
     },
   });
-  if (chat?.chat.length) {
+  if (chat?.Chat.length) {
     const chatSession = chat?.chat[0]?.session;
     return NextResponse.json({ chatSession: chatSession + 1 }, { status: 200 });
   }
