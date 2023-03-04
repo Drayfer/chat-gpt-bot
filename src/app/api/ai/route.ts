@@ -1,10 +1,8 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-// import { Cors } from "@/lib/cors";
 import client from "@/lib/prismadb";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { Configuration, OpenAIApi } from "openai";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });

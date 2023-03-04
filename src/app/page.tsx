@@ -213,7 +213,7 @@ export default function Home() {
           >
             Clear dialog
           </button>
-          <div></div>
+          <div className="w-[48px]"></div>
         </div>
       </div>
     </main>
