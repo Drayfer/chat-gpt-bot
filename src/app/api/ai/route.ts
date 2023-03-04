@@ -61,7 +61,7 @@ export async function GET(request: Request) {
   const chat = await client.user.findUnique({
     where: { email },
     select: {
-      Chat: {
+      chat: {
         orderBy: {
           session: "desc",
         },
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
       },
     },
   });
-  if (chat?.Chat.length) {
+  if (chat?.chat.length) {
     const chatSession = chat?.chat[0]?.session;
     return NextResponse.json({ chatSession: chatSession + 1 }, { status: 200 });
   }
