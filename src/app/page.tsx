@@ -183,7 +183,7 @@ export default function Home() {
             }}
           />
           <button
-            className="p-2 absolute bg-transparent resize-none right-0 bottom-2"
+            className="p-2 absolute bg-transparent resize-none right-0 bottom-3"
             onClick={() => {
               setDialog([...dialog, { who: "me", text: input }]);
               setIsAnswer(true);
