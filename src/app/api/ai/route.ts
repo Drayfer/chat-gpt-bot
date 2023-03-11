@@ -1,13 +1,7 @@
 import client from "@/lib/prismadb";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
 interface Question {
   question: string;
   chatSession: number;
@@ -25,13 +19,20 @@ export async function POST(request: Request) {
   } = (await getServerSession(authOptions)) as UserSession;
   const body: Question = await request.json();
   try {
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: body.question,
-      temperature: 0.5,
-      max_tokens: 800,
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      method: "POST",
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: body.question }],
+        temperature: 0.8,
+        max_tokens: 1000,
+      }),
     });
-
+    const data = await response.json();
     const user = await client.user.findUnique({
       where: { email },
     });
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(
-      { answer: response.data.choices[0].text },
+      { answer: data.choices[0].message.content },
       { status: 200 }
     );
   } catch (err) {

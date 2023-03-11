@@ -115,11 +115,8 @@ export default function Home() {
         {dialog.map((item, i) => {
           if (item.who === "me") {
             return (
-              <>
-                <div
-                  key={i + Date.now()}
-                  className="bg-slate-500 w-10/12 ml-auto p-3 rounded-md flex justify-between mb-4 chat"
-                >
+              <div key={i + Date.now()}>
+                <div className="bg-slate-500 w-10/12 ml-auto p-3 rounded-md flex justify-between mb-4 chat">
                   <div className="flex-1 mr-2">{item.text}</div>
                   <div className="flex justify-center items-start h-14 w-14">
                     {session.user?.image && (
@@ -133,15 +130,12 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-              </>
+              </div>
             );
           } else {
             return (
-              <>
-                <div
-                  key={i + Date.now()}
-                  className="bg-gray-600 w-10/12 mr-auto p-3 rounded-md flex mb-4"
-                >
+              <div key={i + Date.now()}>
+                <div className="bg-gray-600 w-10/12 mr-auto p-3 rounded-md flex mb-4">
                   <div className="flex justify-center items-start text-slate-100 mr-5">
                     <AiSvg />
                   </div>
@@ -149,7 +143,7 @@ export default function Home() {
                     {item.text.trim()}
                   </div>
                 </div>
-              </>
+              </div>
             );
           }
         })}
