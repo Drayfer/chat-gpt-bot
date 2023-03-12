@@ -38,3 +38,8 @@
 //   //   console.log(prediction);
 //   return NextResponse.json({ image: prediction.output }, { status: 200 });
 // }
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  return NextResponse.json("ok", { status: 200 });
+}

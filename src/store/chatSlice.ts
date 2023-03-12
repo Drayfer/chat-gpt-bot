@@ -1,9 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  deleteHistoryDialog,
-  fetchDialogHistory,
-  getChatSession,
-} from "./requests/chat";
+import { fetchDialogHistory, getChatSession } from "./requests/chat";
 
 import type { AppState, AppThunk } from "./store";
 
