@@ -121,7 +121,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
               <QuestionCircleOutlined
                 style={{ fontSize: 18, paddingLeft: 5 }}
               />
-              Developer's Page
+              Developer&apos;s Page
             </Button>
             <Button
               className="flex justify-start border-0 text-white gap-2"
