@@ -33,7 +33,8 @@ export async function POST(request: Request) {
       }),
     });
     const data = await response.json();
-    const answerString: string = data.choices[0].message.content.trim();
+    const answerString: string =
+      data.choices[0].message.content.trim() as string;
     const user = await client.user.findUnique({
       where: { email },
     });
@@ -42,7 +43,6 @@ export async function POST(request: Request) {
         message: body.question,
         session: body.chatSession,
         userId: user?.id,
-        answer: "no",
       },
     });
     return NextResponse.json({ answer: answerString }, { status: 200 });
