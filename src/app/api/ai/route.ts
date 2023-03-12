@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         message: body.question,
         session: body.chatSession,
         userId: user?.id,
-        answer: data.choices[0].message.content.trim(),
+        answer: data.choices[0].message.content.trim() as string,
       },
     });
     return NextResponse.json(

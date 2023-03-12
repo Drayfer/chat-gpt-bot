@@ -105,6 +105,7 @@ export default function Home() {
       handleSubmit();
       setIsAnswer(false);
     }
+    // eslint-disable-next-line
   }, [isAnswer]);
 
   useEffect(() => {
@@ -116,6 +117,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getChatSession());
+    //eslint-disable-next-line
   }, []);
 
   if (!session) {
