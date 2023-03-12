@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         message: body.question,
         session: body.chatSession,
         userId: user?.id,
-        answer: answerString,
+        answer: "no",
       },
     });
     return NextResponse.json({ answer: answerString }, { status: 200 });
