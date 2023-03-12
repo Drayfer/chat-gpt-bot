@@ -2,6 +2,7 @@
 
 import "./globals.css";
 import Providers from "./Providers";
+// import 'antd/dist/reset.css';
 
 export default function RootLayout({
   children,
