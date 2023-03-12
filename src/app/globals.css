@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-btn-default:hover {
+  /* background-color: red !important; */
+  border-color: rgb(215, 215, 215) !important;
+  color: rgb(215, 215, 215) !important;
+}

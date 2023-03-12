@@ -9,6 +9,13 @@ import Image from "next/image";
 import AiSvg from "./svg/ai";
 import LogoutSvg from "./svg/logoutSvg";
 import { redirect } from "next/navigation";
+import { Input } from "antd";
+import InputQuestion from "@/components/input/InputQuestion";
+import EmptyDialog from "./EmptyDialog";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { getChatSession } from "@/store/requests/chat";
+import { updateChatSession } from "@/store/chatSlice";
+const { TextArea } = Input;
 
 interface Dialog {
   who: string;
@@ -35,7 +42,12 @@ export default function Home() {
   const [isAnswer, setIsAnswer] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [chatSession, setChatSession] = useState(0);
+
+  const { historyDialog, chatSession } = useAppSelector((state) => ({
+    historyDialog: state.chat.dialog,
+    chatSession: state.chat.session,
+  }));
+  const dispatch = useAppDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
@@ -64,17 +76,28 @@ export default function Home() {
       });
   };
 
+  useEffect(() => {
+    if (historyDialog.length) {
+      let history: Dialog[] = [];
+      historyDialog.forEach((item) => {
+        history.push(
+          { who: "me", text: item.message },
+          { who: "bot", text: item.answer }
+        );
+      });
+      setDialog(history);
+      dispatch(updateChatSession(historyDialog[0].session));
+      setTimeout(scrollToBottom, 100);
+    } else {
+      setDialog([]);
+      dispatch(getChatSession());
+    }
+  }, [historyDialog, dispatch]);
+
   const scrollToBottom = () => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
-  };
-
-  const getChatSession = async () => {
-    const { chatSession }: { chatSession: number } = await fetch(
-      "/api/ai"
-    ).then((res) => res.json());
-    setChatSession(chatSession);
   };
 
   useEffect(() => {
@@ -92,26 +115,25 @@ export default function Home() {
   }, [scroll, isTyping]);
 
   useEffect(() => {
-    getChatSession();
+    dispatch(getChatSession());
   }, []);
 
   if (!session) {
     redirect("/login");
   }
 
+  const handleSendQuestion = () => {
+    if (input.trim().length) {
+      setDialog([...dialog, { who: "me", text: input }]);
+      setIsAnswer(true);
+      setScroll(true);
+    }
+  };
+
   return (
     <main className="h-screen text-[#D1D5DA] flex flex-col">
       <div className="flex-1 flex-col pt-5 overflow-y-auto pb-5 px-5" ref={ref}>
-        {!dialog.length && (
-          <>
-            <div className="text-3xl flex justify-center items-center flex-col h-full">
-              <p>Chat GPT</p>
-              <p className="text-base mt-2">
-                Ask anything to start a conversation...
-              </p>
-            </div>
-          </>
-        )}
+        {!dialog.length && <EmptyDialog />}
         {dialog.map((item, i) => {
           if (item.who === "me") {
             return (
@@ -139,9 +161,7 @@ export default function Home() {
                   <div className="flex justify-center items-start text-slate-100 mr-5">
                     <AiSvg />
                   </div>
-                  <div className="whitespace-pre-line flex-1">
-                    {item.text.trim()}
-                  </div>
+                  <div className="whitespace-pre-line flex-1">{item.text}</div>
                 </div>
               </div>
             );
@@ -163,52 +183,18 @@ export default function Home() {
           </div>
         )}
       </div>
-      <div className="min-h-[110px] p-2">
-        <div className="relative md:mx-5">
-          <TextareaAutosize
-            minRows={1}
-            maxRows={6}
-            value={input}
-            placeholder="Ask something..."
-            className="w-full rounded-sm m-0 border-0 text-lg bg-slate-500 pl-2 pr-8 py-2"
-            style={{ resize: "none" }}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.keyCode === 13) {
-                e.preventDefault();
-                setDialog([...dialog, { who: "me", text: input }]);
-                setIsAnswer(true);
-                setScroll(true);
-              }
-            }}
-          />
-          <button
-            className="p-2 absolute bg-transparent resize-none right-0 bottom-3"
-            onClick={() => {
-              setDialog([...dialog, { who: "me", text: input }]);
-              setIsAnswer(true);
-              setScroll(true);
-            }}
-          >
-            <Send />
-          </button>
-        </div>
-        <div className="mt-2 flex justify-between">
-          <button className="p-3 rounded-lg" onClick={() => signOut()}>
-            <LogoutSvg />
-          </button>
-          <button
-            className="p-3 bg-slate-600 rounded-lg"
-            disabled={!dialog.length}
-            onClick={() => {
-              setDialog([]);
-              setChatSession((prev) => prev + 1);
-            }}
-          >
-            Clear dialog
-          </button>
-          <div className="w-[48px]"></div>
-        </div>
+      <div className="min-h-[70px] p-2">
+        <InputQuestion
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              e.preventDefault();
+              handleSendQuestion();
+            }
+          }}
+          onSendQuestion={handleSendQuestion}
+        />
       </div>
     </main>
   );

@@ -7,7 +7,7 @@ interface Question {
   chatSession: number;
 }
 
-interface UserSession {
+export interface UserSession {
   user: {
     email: string;
   };
@@ -41,10 +41,11 @@ export async function POST(request: Request) {
         message: body.question,
         session: body.chatSession,
         userId: user?.id,
+        answer: data.choices[0].message.content.trim(),
       },
     });
     return NextResponse.json(
-      { answer: data.choices[0].message.content },
+      { answer: data.choices[0].message.content.trim() },
       { status: 200 }
     );
   } catch (err) {
