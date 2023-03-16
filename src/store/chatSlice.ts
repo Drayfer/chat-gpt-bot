@@ -1,23 +1,25 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchDialogHistory, getChatSession } from "./requests/chat";
 
-import type { AppState, AppThunk } from "./store";
-
-interface IDialog {
+export type TModel = "gpt" | "image";
+export interface IDialog {
   message: string;
   answer: string;
   session: number;
   createdAt: Date;
+  model: number;
 }
 
 export interface IChat {
   dialog: IDialog[];
   session: number;
+  model: TModel;
 }
 
 const initialState: IChat = {
   dialog: [],
   session: 0,
+  model: "gpt",
 };
 
 export const chatSlice = createSlice({
@@ -31,12 +33,17 @@ export const chatSlice = createSlice({
     updateChatSession: (state, action: PayloadAction<number>) => {
       state.session = action.payload;
     },
+    setModel: (state, action: PayloadAction<TModel>) => {
+      state.model = action.payload;
+    },
   },
   extraReducers: {
     [fetchDialogHistory.fulfilled.type]: (
       state,
       action: PayloadAction<IDialog[]>
     ) => {
+      const model: TModel = action.payload[0].model === 0 ? "gpt" : "image";
+      state.model = model;
       state.dialog = action.payload;
     },
     [getChatSession.fulfilled.type]: (state, action: PayloadAction<number>) => {
@@ -45,6 +52,6 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { resetDialog, updateChatSession } = chatSlice.actions;
+export const { resetDialog, updateChatSession, setModel } = chatSlice.actions;
 
 export default chatSlice.reducer;

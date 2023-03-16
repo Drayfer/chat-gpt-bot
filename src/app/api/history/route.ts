@@ -8,6 +8,7 @@ interface IFiltered {
   [key: string]: {
     id: number;
     message: string | null;
+    model: number;
   };
 }
 
@@ -33,6 +34,7 @@ export async function GET(request: Request) {
         message: true,
         session: true,
         id: true,
+        model: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -43,6 +45,7 @@ export async function GET(request: Request) {
       filtered[`${item.session.toString()}`] = {
         id: item.id,
         message: item.message,
+        model: item.model,
       };
     });
     const reversed = Object.values(filtered).map((item) => {
@@ -50,6 +53,7 @@ export async function GET(request: Request) {
         id: item.id,
         title: item.message,
         session: messages.find((elem) => elem.id === item.id)?.session,
+        model: item.model,
       };
     });
 

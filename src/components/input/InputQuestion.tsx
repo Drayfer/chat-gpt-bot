@@ -9,7 +9,7 @@ import { MenuOutlined, LeftCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Menu from "../menu/Menu";
 import { useAppDispatch } from "@/hooks/redux";
-import { resetDialog } from "@/store/chatSlice";
+import { resetDialog, setModel } from "@/store/chatSlice";
 
 interface IInputQuestion extends TextAreaProps {
   onSendQuestion: () => void;
@@ -29,7 +29,7 @@ const InputQuestion = (props: IInputQuestion) => {
   return (
     <>
       <Menu setIsOpenMenu={setIsOpenMenu} isOpenMenu={isOpenMenu} />
-      <div className="relative md:mx-5">
+      <div className="relative">
         <TextArea
           {...params}
           value={value}
@@ -70,6 +70,7 @@ const InputQuestion = (props: IInputQuestion) => {
             onClick={(e) => {
               e.stopPropagation();
               dispatch(resetDialog());
+              dispatch(setModel("gpt"));
             }}
           >
             <LeftCircleOutlined style={{ fontSize: 20 }} />

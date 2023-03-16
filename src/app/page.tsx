@@ -2,33 +2,39 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Comment } from "react-loader-spinner";
-import { useSession, signOut } from "next-auth/react";
-import TextareaAutosize from "react-textarea-autosize";
-import Send from "./svg/send";
-import Image from "next/image";
+import { useSession } from "next-auth/react";
+import NextImage from "next/image";
 import AiSvg from "./svg/ai";
-import LogoutSvg from "./svg/logoutSvg";
 import { redirect } from "next/navigation";
-import { Input } from "antd";
 import InputQuestion from "@/components/input/InputQuestion";
 import EmptyDialog from "./EmptyDialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { getChatSession } from "@/store/requests/chat";
-import { updateChatSession } from "@/store/chatSlice";
-const { TextArea } = Input;
+import { resetDialog, setModel, updateChatSession } from "@/store/chatSlice";
+import ImageStartDialog from "./ImageStartDialog";
+import { saveAs } from "file-saver";
+import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import EmptyImage from "./images/empty-image.png";
+import {
+  addMessage,
+  clearMessages,
+  updateMessages,
+} from "@/store/messagesSlice";
+import NeedUpdate from "./NeedUpdate";
 
-interface Dialog {
+export interface Dialog {
   who: string;
   text: string;
 }
 
-const askAi = async (text: string, chatSession: number) => {
+const askAi = async (text: string, chatSession: number, model: number) => {
   return await fetch("/api/ai", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ question: text, chatSession }),
+    body: JSON.stringify({ question: text, chatSession, model }),
   })
     .then((res) => res.json())
     .then((res) => {
@@ -36,47 +42,92 @@ const askAi = async (text: string, chatSession: number) => {
     });
 };
 
+const askImage = async (text: string, chatSession: number, model: number) => {
+  return await fetch("/api/image", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ question: text, chatSession, model }),
+  }).then((res) => res.json());
+};
+
 export default function Home() {
   const [input, setInput] = useState("");
-  const [dialog, setDialog] = useState<Dialog[]>([]);
-  const [isAnswer, setIsAnswer] = useState(false);
+  // const [dialog, setDialog] = useState<Dialog[]>([]);
+  // const [isAnswer, setIsAnswer] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const { historyDialog, chatSession } = useAppSelector((state) => ({
-    historyDialog: state.chat.dialog,
-    chatSession: state.chat.session,
-  }));
+  const { historyDialog, chatSession, model, currentChat } = useAppSelector(
+    (state) => ({
+      historyDialog: state.chat.dialog,
+      chatSession: state.chat.session,
+      model: state.chat.model,
+      currentChat: state.messages.currentChat,
+    })
+  );
   const dispatch = useAppDispatch();
-
   const ref = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
   const handleSubmit = async () => {
+    setImageError(false);
     const question = input;
     setInput("");
     setIsTyping(true);
-    askAi(question, chatSession)
-      .then((answer) => {
-        setDialog([...dialog, { who: "bot", text: answer }]);
-      })
-      .catch((err) => {
-        setDialog([
-          ...dialog,
-          { who: "bot", text: "Something went wrong, please ask again" },
-        ]);
-        const lastMyMessage = dialog.filter((obj) => obj.who === "me").pop();
-        if (lastMyMessage) {
-          setInput(lastMyMessage.text);
-        }
-      })
-      .finally(() => {
-        setScroll(true);
-        setIsTyping(false);
-      });
+    if (model === "gpt") {
+      const modelType = 0;
+      askAi(question, chatSession, modelType)
+        .then((answer) => {
+          dispatch(addMessage({ who: "bot", text: answer }));
+        })
+        .catch((err) => {
+          dispatch(
+            addMessage({
+              who: "bot",
+              text: "Something went wrong, please ask again",
+            })
+          );
+          const lastMyMessage = currentChat
+            .filter((obj) => obj.who === "me")
+            .pop();
+          if (lastMyMessage) {
+            setInput(lastMyMessage.text);
+          }
+        })
+        .finally(() => {
+          setScroll(true);
+          setIsTyping(false);
+        });
+    } else if (model === "image") {
+      const modelType = 1;
+      askImage(question, chatSession, modelType)
+        .then((data) => {
+          if (!data.answer) {
+            throw new Error("error");
+          }
+          dispatch(addMessage({ who: "bot", text: data.answer }));
+        })
+        .catch((err) => {
+          dispatch(addMessage({ who: "bot", text: "error" }));
+          const lastMyMessage = currentChat
+            .filter((obj) => obj.who === "me")
+            .pop();
+          if (lastMyMessage) {
+            setInput(lastMyMessage.text);
+          }
+        })
+        .finally(() => {
+          setScroll(true);
+          setIsTyping(false);
+        });
+    }
   };
 
   useEffect(() => {
+    setImageError(false);
     if (historyDialog.length) {
       let history: Dialog[] = [];
       historyDialog.forEach((item) => {
@@ -85,28 +136,21 @@ export default function Home() {
           { who: "bot", text: item.answer }
         );
       });
-      setDialog(history);
+      dispatch(updateMessages(history));
       dispatch(updateChatSession(historyDialog[0].session));
       setTimeout(scrollToBottom, 100);
     } else {
-      setDialog([]);
+      dispatch(clearMessages());
       dispatch(getChatSession());
     }
-  }, [historyDialog, dispatch]);
+    //eslint-disable-next-line
+  }, [historyDialog]);
 
   const scrollToBottom = () => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
   };
-
-  useEffect(() => {
-    if (isAnswer) {
-      handleSubmit();
-      setIsAnswer(false);
-    }
-    // eslint-disable-next-line
-  }, [isAnswer]);
 
   useEffect(() => {
     if (scroll || isTyping) {
@@ -125,26 +169,58 @@ export default function Home() {
   }
 
   const handleSendQuestion = () => {
-    if (input.trim().length) {
-      setDialog([...dialog, { who: "me", text: input }]);
-      setIsAnswer(true);
+    if (input.trim().length && !isTyping) {
+      dispatch(addMessage({ who: "me", text: input }));
       setScroll(true);
+      handleSubmit();
     }
   };
 
+  const saveFile = (fileString: string) => {
+    const id = Date.now().toString();
+    saveAs(fileString, `Image(${id.substring(id.length - 4)}).png`);
+  };
+
+  const handleNewChat = () => {
+    dispatch(resetDialog());
+    dispatch(setModel("gpt"));
+  };
+  if (process.env.NEED_UPDATE === "true") {
+    return <NeedUpdate />;
+  }
   return (
     <main className="h-screen text-[#D1D5DA] flex flex-col">
-      <div className="flex-1 flex-col pt-5 overflow-y-auto pb-5 px-5" ref={ref}>
-        {!dialog.length && <EmptyDialog />}
-        {dialog.map((item, i) => {
+      {currentChat.length ? (
+        <div className="p-2 py-0 border-2 border-white/20 text-white/50 text-xs flex justify-between items-center">
+          <div>
+            <span className="font-light">Chat Model:</span>{" "}
+            <span className="font-bold">
+              {model === "image" ? "Midjourney" : "gpt-3.5-turbo"}
+            </span>
+          </div>
+          <Button
+            className="p-2 m-0 h-100 text-white border-0 flex justify-center items-center hover:bg-white/10"
+            onClick={handleNewChat}
+          >
+            <PlusOutlined className="text-xs" />
+          </Button>
+        </div>
+      ) : null}
+      <div className="flex-1 flex-col pt-3 overflow-y-auto pb-0 px-3" ref={ref}>
+        {/* {!currentChat.length && model === gpt && <SelectModel />} */}
+        {model === "gpt" && !currentChat.length && <EmptyDialog />}
+        {model === "image" && !currentChat.length && <ImageStartDialog />}
+        {currentChat.map((item, i) => {
           if (item.who === "me") {
             return (
-              <div key={i + Date.now()}>
-                <div className="bg-slate-500 w-10/12 ml-auto p-3 rounded-md flex justify-between mb-4 chat">
-                  <div className="flex-1 mr-2">{item.text}</div>
+              <div key={i}>
+                <div className="bg-slate-500 w-11/12 ml-auto p-3 rounded-md flex justify-between mb-4 overflow-hidden chat">
+                  <div className="whitespace-pre-wrap flex-1 overflow-hidden break-words mr-2">
+                    {item.text}
+                  </div>
                   <div className="flex justify-center items-start h-14 w-14">
                     {session.user?.image && (
-                      <Image
+                      <NextImage
                         src={session.user?.image}
                         alt="avatar"
                         width={100}
@@ -158,12 +234,49 @@ export default function Home() {
             );
           } else {
             return (
-              <div key={i + Date.now()}>
-                <div className="bg-gray-600 w-10/12 mr-auto p-3 rounded-md flex mb-4">
+              <div key={i}>
+                <div className="bg-gray-600 w-11/12 mr-auto p-3 rounded-md flex mb-4">
                   <div className="flex justify-center items-start text-slate-100 mr-5">
                     <AiSvg />
                   </div>
-                  <div className="whitespace-pre-line flex-1">{item.text}</div>
+                  <div className="whitespace-pre-wrap flex-1 overflow-hidden break-words">
+                    {model === "image" ? (
+                      <>
+                        {item.text === "error" || !item.text.length ? (
+                          "Something went wrong, please ask again"
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            {!imageError ? (
+                              <>
+                                <NextImage
+                                  src={item.text}
+                                  width={1000}
+                                  height={1000}
+                                  alt="generated_image"
+                                  onError={() => setImageError(true)}
+                                />
+                                <Button
+                                  className="mt-3 text-white/70"
+                                  onClick={() => saveFile(item.text)}
+                                >
+                                  Download Image
+                                </Button>
+                              </>
+                            ) : (
+                              <NextImage
+                                src={EmptyImage}
+                                width={200}
+                                height={200}
+                                alt="not available"
+                              />
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      item.text
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -181,11 +294,13 @@ export default function Home() {
               color="#fff"
               backgroundColor="#0BA37F"
             />
-            <div className="ml-3">typing...</div>
+            <div className="ml-3">
+              {model === "image" ? "generate" : "typing"}...
+            </div>
           </div>
         )}
       </div>
-      <div className="min-h-[70px] p-2">
+      <div className="min-h-[70px] p-3 pb-4">
         <InputQuestion
           value={input}
           onChange={(e) => setInput(e.target.value)}

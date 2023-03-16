@@ -1,10 +1,11 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import chatSlice from "./chatSlice";
+import messagesSlice from "./messagesSlice";
 
 export function makeStore() {
   return configureStore({
-    reducer: { chat: chatSlice },
+    reducer: { chat: chatSlice, messages: messagesSlice },
   });
 }
 

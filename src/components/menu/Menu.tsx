@@ -1,25 +1,21 @@
 "use client";
 
-import Send from "@/app/svg/send";
-import { Button, Divider, Drawer, Input, Space } from "antd";
-import { TextAreaProps } from "antd/es/input";
-const { TextArea } = Input;
+import { Button, Divider, Drawer, Space } from "antd";
 import classnames from "classnames";
 import {
-  MenuOutlined,
-  LeftCircleOutlined,
   CloseOutlined,
   PlusOutlined,
   CommentOutlined,
   DeleteOutlined,
   QuestionCircleOutlined,
+  FileImageOutlined,
 } from "@ant-design/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LogoutSvg from "@/app/svg/logoutSvg";
 import { signOut } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchDialogHistory } from "@/store/requests/chat";
-import { resetDialog } from "@/store/chatSlice";
+import { resetDialog, setModel } from "@/store/chatSlice";
 
 interface IMenu {
   isOpenMenu: boolean;
@@ -30,6 +26,7 @@ interface IHistory {
   id: number;
   title: string;
   session: number;
+  model: number;
 }
 
 const getHistory = async () => {
@@ -63,6 +60,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   }, [isOpenMenu]);
 
   const handleChooseTitle = async (item: IHistory) => {
+    dispatch(resetDialog());
     dispatch(fetchDialogHistory(item.session));
     setIsOpenMenu(false);
   };
@@ -80,6 +78,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   const handleNewChat = () => {
     dispatch(resetDialog());
     setIsOpenMenu(false);
+    dispatch(setModel("gpt"));
   };
 
   return (
@@ -158,10 +157,14 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 )}
               >
                 <div
-                  className="truncate pr-3 hover:last:text-red-600 w-full"
+                  className="truncate pr-3 hover:last:text-red-600 w-full flex items-center"
                   onClick={() => handleChooseTitle(item)}
                 >
-                  <CommentOutlined className="mr-3 text-white/50" />
+                  {item.model === 0 ? (
+                    <CommentOutlined className="mr-3 text-white/50" />
+                  ) : (
+                    <FileImageOutlined className="mr-3 text-white/50" />
+                  )}
                   {item.title}
                 </div>
                 <Button

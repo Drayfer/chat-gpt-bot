@@ -2,9 +2,10 @@ import client from "@/lib/prismadb";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-interface Question {
+export interface Question {
   question: string;
   chatSession: number;
+  model: number;
 }
 
 export interface UserSession {
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: body.question }],
         temperature: 0.8,
-        max_tokens: 1000,
+        max_tokens: 700,
       }),
     });
     const data = await response.json();
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
         session: body.chatSession,
         userId: user?.id,
         answer: answerString,
+        model: body.model,
       },
     });
     return NextResponse.json({ answer: answerString }, { status: 200 });

@@ -31,6 +31,7 @@ export async function GET(request: Request, { params }: IParams) {
         answer: true,
         session: true,
         createdAt: true,
+        model: true,
       },
       orderBy: {
         createdAt: "asc",
