@@ -73,6 +73,10 @@ export async function GET(request: Request) {
       },
     },
   });
+  await client.user.update({
+    where: { email },
+    data: { updatedDate: new Date() },
+  });
   if (chat?.chat.length) {
     const chatSession = chat?.chat[0]?.session;
     return NextResponse.json({ chatSession: chatSession + 1 }, { status: 200 });
