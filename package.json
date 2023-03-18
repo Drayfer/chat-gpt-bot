@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@eisberg-labs/next-google-adsense": "^4.0.2",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
     "@reduxjs/toolkit": "^1.9.3",
