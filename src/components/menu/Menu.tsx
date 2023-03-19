@@ -112,10 +112,10 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
               }}
             />
             <Button
-              className="flex justify-start items-center border-0 text-white gap-1 mb-2"
-              onClick={() =>
-                (window.location.href = "https://t.me/chat_gpt_application")
-              }
+              className="flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
+              href="https://t.me/chat_gpt_application"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <QuestionCircleOutlined
                 style={{ fontSize: 18, paddingLeft: 5 }}
