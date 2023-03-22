@@ -13,7 +13,7 @@ export default function SelectModel() {
   return (
     <>
       <div className="flex justify-center items-center flex-col h-full">
-        <p className="text-4xl mb-3 font-bold">Chat GPT</p>
+        <p className="text-4xl mb-3 font-bold">GPT AI Chat Bot</p>
         <p className="text-xl mb-3 font-extralight">Choose Model:</p>
         <div
           className="flex flex-col justify-center items-center bg-[#5d5d68] p-4 mb-4 cursor-pointer w-72"
@@ -21,7 +21,7 @@ export default function SelectModel() {
         >
           <div className="text-lg font-bold mb-2">Open AI</div>
           <div className="text-sm font-light">
-            Text chat with Chat GPT assistent
+            Text chat with GPT AI Chat Bot assistent
           </div>
         </div>
         <div

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Comment } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
-import AiSvg from "./svg/ai";
+import AIimg from "./svg/ai.webp";
 import { redirect } from "next/navigation";
 import InputQuestion from "@/components/input/InputQuestion";
 import EmptyDialog from "./EmptyDialog";
@@ -223,8 +223,8 @@ export default function Home() {
                       <NextImage
                         src={session.user?.image}
                         alt="avatar"
-                        width={100}
-                        height={100}
+                        width={50}
+                        height={50}
                         className="rounded-full"
                       />
                     )}
@@ -237,7 +237,12 @@ export default function Home() {
               <div key={i}>
                 <div className="bg-gray-600 w-11/12 mr-auto p-3 rounded-md flex mb-4">
                   <div className="flex justify-center items-start text-slate-100 mr-5">
-                    <AiSvg />
+                    <NextImage
+                      src={AIimg}
+                      width={40}
+                      height={40}
+                      alt="ai_image"
+                    />
                   </div>
                   <div className="whitespace-pre-wrap flex-1 overflow-hidden break-words">
                     {model === "image" ? (
