@@ -5,6 +5,7 @@ const nextConfig = {
   },
   env: {
     NEED_UPDATE: process.env.NEED_UPDATE,
+    VERSION: process.env.VERSION,
   },
   images: {
     remotePatterns: [

@@ -1,4 +1,9 @@
-// declare module "replicate" {
-//   // your code here
-//   declare function model(arg1: string): any;
-// }
+export {};
+
+declare global {
+  interface Window {
+    ReactNativeWebView: {
+      postMessage(msg: string): void;
+    };
+  }
+}

@@ -22,6 +22,7 @@ import {
   updateMessages,
 } from "@/store/messagesSlice";
 import NeedUpdate from "./NeedUpdate";
+import useCheckUpdates from "@/hooks/useCheckUpdates";
 
 export interface Dialog {
   who: string;
@@ -53,13 +54,6 @@ const askImage = async (text: string, chatSession: number, model: number) => {
 };
 
 export default function Home() {
-  const [input, setInput] = useState("");
-  // const [dialog, setDialog] = useState<Dialog[]>([]);
-  // const [isAnswer, setIsAnswer] = useState(false);
-  const [scroll, setScroll] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   const { historyDialog, chatSession, model, currentChat } = useAppSelector(
     (state) => ({
       historyDialog: state.chat.dialog,
@@ -68,6 +62,16 @@ export default function Home() {
       currentChat: state.messages.currentChat,
     })
   );
+
+  const { isUpdate } = useCheckUpdates();
+
+  const [input, setInput] = useState("");
+  // const [dialog, setDialog] = useState<Dialog[]>([]);
+  // const [isAnswer, setIsAnswer] = useState(false);
+  const [scroll, setScroll] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
@@ -185,9 +189,11 @@ export default function Home() {
     dispatch(resetDialog());
     dispatch(setModel("gpt"));
   };
-  if (process.env.NEED_UPDATE === "true") {
+
+  if (isUpdate) {
     return <NeedUpdate />;
   }
+
   return (
     <main className="h-screen text-[#D1D5DA] flex flex-col">
       {currentChat.length ? (
