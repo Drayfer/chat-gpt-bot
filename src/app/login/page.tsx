@@ -110,12 +110,20 @@ export default function Login() {
         >
           Developer&apos;s Page
         </Button>
-        <Link
-          className="px-[15px] py-1 flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
-          href="/privacy"
-        >
-          Privacy
-        </Link>
+        <div className="flex">
+          <Link
+            className="px-[15px] py-1 flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
+            href="/agreement"
+          >
+            Agreement
+          </Link>
+          <Link
+            className="px-[15px] py-1 flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
+            href="/privacy"
+          >
+            Privacy
+          </Link>
+        </div>
       </div>
     </div>
   );
