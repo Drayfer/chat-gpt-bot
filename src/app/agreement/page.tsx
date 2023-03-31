@@ -94,7 +94,7 @@ export default function Login() {
       <p className="mb-6">
         5.3. The User agrees to indemnify and hold GPT AI Chat Bot harmless from
         any claims, damages, or losses arising out of or in connection with the
-        User's use of the Application.
+        User&apos;s use of the Application.
       </p>
 
       <h2 className="text-2xl mb-6 font-bold">6. Privacy policy</h2>
