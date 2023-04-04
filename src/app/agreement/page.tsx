@@ -107,6 +107,7 @@ export default function Login() {
         6.2. The User agrees that GPT AI Chat Bot may collect, use, and disclose
         their personal information in accordance with the Privacy Policy.
       </p>
+
       <h2 className="text-2xl mb-6 font-bold">
         7. Governing law and dispute resolution
       </h2>
