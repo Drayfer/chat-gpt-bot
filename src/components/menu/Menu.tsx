@@ -9,13 +9,15 @@ import {
   DeleteOutlined,
   QuestionCircleOutlined,
   FileImageOutlined,
+  CrownOutlined,
 } from "@ant-design/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LogoutSvg from "@/app/svg/logoutSvg";
 import { signOut } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { fetchDialogHistory } from "@/store/requests/chat";
-import { resetDialog, setModel } from "@/store/chatSlice";
+import { fetchDialogHistory, getChatSession } from "@/store/requests/chat";
+import { clearMessages, setModel } from "@/store/chatSlice";
+import Link from "next/link";
 
 interface IMenu {
   isOpenMenu: boolean;
@@ -45,9 +47,9 @@ const deleteHistoryDialog = async (sessionId: number) => {
 };
 
 const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
-  const { currentSession, dialog } = useAppSelector((state) => ({
+  const { currentSession, currentChat } = useAppSelector((state) => ({
     currentSession: state.chat.session,
-    dialog: state.chat.dialog,
+    currentChat: state.chat.currentChat,
   }));
   const [history, setHistory] = useState<IHistory[]>([]);
 
@@ -60,25 +62,25 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   }, [isOpenMenu]);
 
   const handleChooseTitle = async (item: IHistory) => {
-    dispatch(resetDialog());
     dispatch(fetchDialogHistory(item.session));
     setIsOpenMenu(false);
   };
 
+  const handleNewChat = () => {
+    setIsOpenMenu(false);
+    dispatch(setModel("startGpt"));
+    dispatch(clearMessages());
+    dispatch(getChatSession());
+  };
+
   const handleDeleteDialog = async (sessionId: number) => {
-    if (dialog.length && dialog[0].session === currentSession) {
+    if (currentChat.length && sessionId === currentSession) {
       handleNewChat();
     }
     try {
       await deleteHistoryDialog(sessionId);
       setHistory(history.filter((item) => item.session !== sessionId));
     } catch (err) {}
-  };
-
-  const handleNewChat = () => {
-    dispatch(resetDialog());
-    setIsOpenMenu(false);
-    dispatch(setModel("gpt"));
   };
 
   return (
@@ -104,13 +106,23 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
         headerStyle={{ color: "#ff0000" }}
         bodyStyle={{ paddingLeft: 0, paddingRight: 0 }}
         footer={
-          <div className="">
+          <div>
             <Divider
               className="my-3"
               style={{
                 borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
               }}
             />
+            <Link
+              className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
+              href={"/upgrade"}
+            >
+              <CrownOutlined
+                className="text-[#FFBA00]"
+                style={{ fontSize: 18, paddingLeft: 5 }}
+              />
+              Upgrade to Pro
+            </Link>
             <Button
               className="flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
               href="https://t.me/chat_gpt_application"

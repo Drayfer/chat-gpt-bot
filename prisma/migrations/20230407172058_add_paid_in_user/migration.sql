@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "paid" TIMESTAMP(3) DEFAULT NULL;

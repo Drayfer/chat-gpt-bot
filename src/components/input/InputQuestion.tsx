@@ -9,7 +9,8 @@ import { MenuOutlined, LeftCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Menu from "../menu/Menu";
 import { useAppDispatch } from "@/hooks/redux";
-import { resetDialog, setModel } from "@/store/chatSlice";
+import { clearMessages, setModel } from "@/store/chatSlice";
+import { getChatSession } from "@/store/requests/chat";
 
 interface IInputQuestion extends TextAreaProps {
   onSendQuestion: () => void;
@@ -69,8 +70,9 @@ const InputQuestion = (props: IInputQuestion) => {
             className="px-3 absolute bg-transparent resize-none right-0 bottom-0 flex justify-center items-center h-full"
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(resetDialog());
-              dispatch(setModel("gpt"));
+              dispatch(setModel("startGpt"));
+              dispatch(clearMessages());
+              dispatch(getChatSession());
             }}
           >
             <LeftCircleOutlined style={{ fontSize: 20 }} />

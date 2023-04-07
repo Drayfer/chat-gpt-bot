@@ -5,8 +5,8 @@ import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import GoogleSvg from "./svg/googleSvg";
 import AIimg from "../svg/ai.webp";
-import Link from "next/link";
 import Image from "next/image";
+import Footer from "./Footer";
 
 export default function Login() {
   const { data: session } = useSession();
@@ -95,36 +95,8 @@ export default function Login() {
           the most advanced language model in the world.
         </p>
       </div>
-      <Divider
-        className="my-3"
-        style={{
-          borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
-        }}
-      />
-      <div className="flex justify-between">
-        <Button
-          className="flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
-          href="https://t.me/chat_gpt_application"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Developer&apos;s Page
-        </Button>
-        <div className="flex">
-          <Link
-            className="px-[15px] py-1 flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
-            href="/agreement"
-          >
-            Agreement
-          </Link>
-          <Link
-            className="px-[15px] py-1 flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
-            href="/privacy"
-          >
-            Privacy
-          </Link>
-        </div>
-      </div>
+
+      <Footer />
     </div>
   );
 }

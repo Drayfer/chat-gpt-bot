@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Comment } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
@@ -10,22 +10,18 @@ import InputQuestion from "@/components/input/InputQuestion";
 import EmptyDialog from "./EmptyDialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { getChatSession } from "@/store/requests/chat";
-import { resetDialog, setModel, updateChatSession } from "@/store/chatSlice";
+import { setModel } from "@/store/chatSlice";
 import ImageStartDialog from "./ImageStartDialog";
-import { saveAs } from "file-saver";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import EmptyImage from "./images/empty-image.png";
-import {
-  addMessage,
-  clearMessages,
-  updateMessages,
-} from "@/store/messagesSlice";
+import { addMessage, clearMessages } from "@/store/chatSlice";
 import NeedUpdate from "./NeedUpdate";
 import useCheckUpdates from "@/hooks/useCheckUpdates";
+import SelectModel from "./SelectModel";
+import BotImageMessage from "./BotImageMessage";
 
 export interface Dialog {
-  who: string;
+  who: "bot" | "me";
   text: string;
 }
 
@@ -54,34 +50,27 @@ const askImage = async (text: string, chatSession: number, model: number) => {
 };
 
 export default function Home() {
-  const { historyDialog, chatSession, model, currentChat } = useAppSelector(
-    (state) => ({
-      historyDialog: state.chat.dialog,
-      chatSession: state.chat.session,
-      model: state.chat.model,
-      currentChat: state.messages.currentChat,
-    })
-  );
+  const { chatSession, model, currentChat } = useAppSelector((state) => ({
+    chatSession: state.chat.session,
+    model: state.chat.model,
+    currentChat: state.chat.currentChat,
+  }));
 
   const { isUpdate } = useCheckUpdates();
 
   const [input, setInput] = useState("");
-  // const [dialog, setDialog] = useState<Dialog[]>([]);
-  // const [isAnswer, setIsAnswer] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
   const handleSubmit = async () => {
-    setImageError(false);
     const question = input;
     setInput("");
     setIsTyping(true);
-    if (model === "gpt") {
+    if (model === "gpt" || model === "startGpt") {
       const modelType = 0;
       askAi(question, chatSession, modelType)
         .then((answer) => {
@@ -130,26 +119,6 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    setImageError(false);
-    if (historyDialog.length) {
-      let history: Dialog[] = [];
-      historyDialog.forEach((item) => {
-        history.push(
-          { who: "me", text: item.message },
-          { who: "bot", text: item.answer }
-        );
-      });
-      dispatch(updateMessages(history));
-      dispatch(updateChatSession(historyDialog[0].session));
-      setTimeout(scrollToBottom, 100);
-    } else {
-      dispatch(clearMessages());
-      dispatch(getChatSession());
-    }
-    //eslint-disable-next-line
-  }, [historyDialog]);
-
   const scrollToBottom = () => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight;
@@ -164,9 +133,21 @@ export default function Home() {
   }, [scroll, isTyping]);
 
   useEffect(() => {
-    dispatch(getChatSession());
+    if (currentChat.length) {
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [currentChat]);
+
+  useEffect(() => {
+    handleNewChat();
     //eslint-disable-next-line
   }, []);
+
+  const handleNewChat = () => {
+    dispatch(setModel("startGpt"));
+    dispatch(clearMessages());
+    dispatch(getChatSession());
+  };
 
   if (!session) {
     redirect("/login");
@@ -180,19 +161,18 @@ export default function Home() {
     }
   };
 
-  const saveFile = (fileString: string) => {
-    const id = Date.now().toString();
-    saveAs(fileString, `Image(${id.substring(id.length - 4)}).png`);
-  };
-
-  const handleNewChat = () => {
-    dispatch(resetDialog());
-    dispatch(setModel("gpt"));
-  };
-
   if (isUpdate) {
     return <NeedUpdate />;
   }
+
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    //if need use only english letters and space
+    // const regex = /[^a-zA-Z0-9\s]/;
+    // if (model === "image" && regex.test(e.target.value)) {
+    //   return;
+    // }
+    setInput(e.target.value);
+  };
 
   return (
     <main className="h-screen text-[#D1D5DA] flex flex-col">
@@ -213,13 +193,13 @@ export default function Home() {
         </div>
       ) : null}
       <div className="flex-1 flex-col pt-3 overflow-y-auto pb-0 px-3" ref={ref}>
-        {/* {!currentChat.length && model === gpt && <SelectModel />} */}
+        {!currentChat.length && model === "startGpt" && <SelectModel />}
         {model === "gpt" && !currentChat.length && <EmptyDialog />}
         {model === "image" && !currentChat.length && <ImageStartDialog />}
         {currentChat.map((item, i) => {
-          if (item.who === "me") {
-            return (
-              <div key={i}>
+          return (
+            <div key={i}>
+              {item.who === "me" ? (
                 <div className="bg-slate-500 w-11/12 ml-auto p-3 rounded-md flex justify-between mb-4 overflow-hidden chat">
                   <div className="whitespace-pre-wrap flex-1 overflow-hidden break-words mr-2">
                     {item.text}
@@ -236,11 +216,7 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-              </div>
-            );
-          } else {
-            return (
-              <div key={i}>
+              ) : (
                 <div className="bg-gray-600 w-11/12 mr-auto p-3 rounded-md flex mb-4">
                   <div className="flex justify-center items-start text-slate-100 mr-5">
                     <NextImage
@@ -257,30 +233,7 @@ export default function Home() {
                           "Something went wrong, please ask again"
                         ) : (
                           <div className="flex flex-col items-center">
-                            {!imageError ? (
-                              <>
-                                <NextImage
-                                  src={item.text}
-                                  width={1000}
-                                  height={1000}
-                                  alt="generated_image"
-                                  onError={() => setImageError(true)}
-                                />
-                                <Button
-                                  className="mt-3 text-white/70"
-                                  onClick={() => saveFile(item.text)}
-                                >
-                                  Download Image
-                                </Button>
-                              </>
-                            ) : (
-                              <NextImage
-                                src={EmptyImage}
-                                width={200}
-                                height={200}
-                                alt="not available"
-                              />
-                            )}
+                            <BotImageMessage link={item.text} chatRef={ref} />
                           </div>
                         )}
                       </>
@@ -289,9 +242,9 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-              </div>
-            );
-          }
+              )}
+            </div>
+          );
         })}
         {isTyping && (
           <div className="bg-gray-600 p-3 rounded-md mb-4 inline-flex items-center">
@@ -314,7 +267,7 @@ export default function Home() {
       <div className="min-h-[70px] p-3 pb-4">
         <InputQuestion
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInput}
           onKeyDown={(e) => {
             if (e.keyCode === 13) {
               e.preventDefault();

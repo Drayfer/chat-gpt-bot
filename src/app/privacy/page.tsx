@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Footer from "../login/Footer";
 
 export default function Login() {
   return (
-    <div className="text-[#D1D5DA] container mx-auto py-10 px-4">
+    <div className="text-[#D1D5DA] container mx-auto pt-10 px-4">
       <div className="mb-10 text-xl">
         <Link href="/login" className="font-extrabold underline">
           Back
@@ -163,6 +164,7 @@ export default function Login() {
         </a>
         .
       </p>
+      <Footer />
     </div>
   );
 }

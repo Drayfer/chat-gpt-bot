@@ -20,10 +20,17 @@ export async function POST(request: Request) {
   } = (await getServerSession(authOptions)) as UserSession;
   const body: Question = await request.json();
   try {
+    const keyData = await client.settings.findFirst({
+      where: {
+        openaiKey: {
+          not: "",
+        },
+      },
+    });
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${keyData?.openaiKey}`,
       },
       method: "POST",
       body: JSON.stringify({
