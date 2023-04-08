@@ -29,6 +29,7 @@
     "eslint-config-next": "13.2.3",
     "file-saver": "^2.0.5",
     "midjourney-client": "^1.0.2",
+    "moment": "^2.29.4",
     "next": "13.2.3",
     "next-auth": "^4.20.1",
     "next-redux-wrapper": "^8.1.0",

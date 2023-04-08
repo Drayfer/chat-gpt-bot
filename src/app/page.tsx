@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Comment } from "react-loader-spinner";
+import { Comment, RotatingLines } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
 import AIimg from "./svg/ai.webp";
@@ -19,6 +19,7 @@ import NeedUpdate from "./NeedUpdate";
 import useCheckUpdates from "@/hooks/useCheckUpdates";
 import SelectModel from "./SelectModel";
 import BotImageMessage from "./BotImageMessage";
+import { fetchUserData } from "@/store/requests/user";
 
 export interface Dialog {
   who: "bot" | "me";
@@ -50,11 +51,14 @@ const askImage = async (text: string, chatSession: number, model: number) => {
 };
 
 export default function Home() {
-  const { chatSession, model, currentChat } = useAppSelector((state) => ({
-    chatSession: state.chat.session,
-    model: state.chat.model,
-    currentChat: state.chat.currentChat,
-  }));
+  const { chatSession, model, currentChat, isLoadUserInfo } = useAppSelector(
+    (state) => ({
+      chatSession: state.chat.session,
+      model: state.chat.model,
+      currentChat: state.chat.currentChat,
+      isLoadUserInfo: state.messages.loading,
+    })
+  );
 
   const { isUpdate } = useCheckUpdates();
 
@@ -140,8 +144,13 @@ export default function Home() {
 
   useEffect(() => {
     handleNewChat();
+    setUserInfo();
     //eslint-disable-next-line
   }, []);
+
+  const setUserInfo = () => {
+    dispatch(fetchUserData());
+  };
 
   const handleNewChat = () => {
     dispatch(setModel("startGpt"));
@@ -161,10 +170,6 @@ export default function Home() {
     }
   };
 
-  if (isUpdate) {
-    return <NeedUpdate />;
-  }
-
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     //if need use only english letters and space
     // const regex = /[^a-zA-Z0-9\s]/;
@@ -173,6 +178,24 @@ export default function Home() {
     // }
     setInput(e.target.value);
   };
+
+  if (isUpdate) {
+    return <NeedUpdate />;
+  }
+
+  if (isLoadUserInfo) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <RotatingLines
+          strokeColor="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="50"
+          visible={true}
+        />
+      </div>
+    );
+  }
 
   return (
     <main className="h-screen text-[#D1D5DA] flex flex-col">

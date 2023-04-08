@@ -48,7 +48,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   chat          Chat[]
-  paid          DateTime? @default(dbgenerated("NULL"))
+  paid          DateTime? @default(dbgenerated("NULL")) @db.Timestamptz(3)
 }
 
 model VerificationToken {

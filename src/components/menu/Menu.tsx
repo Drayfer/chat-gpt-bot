@@ -18,6 +18,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchDialogHistory, getChatSession } from "@/store/requests/chat";
 import { clearMessages, setModel } from "@/store/chatSlice";
 import Link from "next/link";
+import useIsPaid from "@/hooks/useIsPaid";
+import { useRouter } from "next/navigation";
 
 interface IMenu {
   isOpenMenu: boolean;
@@ -52,6 +54,8 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
     currentChat: state.chat.currentChat,
   }));
   const [history, setHistory] = useState<IHistory[]>([]);
+  const { isPaid } = useIsPaid();
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
 
@@ -62,6 +66,10 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   }, [isOpenMenu]);
 
   const handleChooseTitle = async (item: IHistory) => {
+    if (item.model === 1 && !isPaid) {
+      router.push("/upgrade");
+      return;
+    }
     dispatch(fetchDialogHistory(item.session));
     setIsOpenMenu(false);
   };
@@ -121,7 +129,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 className="text-[#FFBA00]"
                 style={{ fontSize: 18, paddingLeft: 5 }}
               />
-              Upgrade to Pro
+              {isPaid ? "PRO" : "Upgrade to Pro"}
             </Link>
             <Button
               className="flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
@@ -169,11 +177,18 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 )}
               >
                 <div
-                  className="truncate pr-3 hover:last:text-red-600 w-full flex items-center"
+                  className={`truncate pr-3 hover:last:text-red-600 w-full flex items-center ${
+                    !isPaid && item.model === 1 ? "text-white/50" : ""
+                  }`}
                   onClick={() => handleChooseTitle(item)}
                 >
                   {item.model === 0 ? (
                     <CommentOutlined className="mr-3 text-white/50" />
+                  ) : !isPaid && item.model === 1 ? (
+                    <CrownOutlined
+                      className="text-[#FFBA00] mr-3"
+                      style={{ fontSize: 18 }}
+                    />
                   ) : (
                     <FileImageOutlined className="mr-3 text-white/50" />
                   )}
