@@ -48,8 +48,12 @@ export const chatSlice = createSlice({
       state,
       action: PayloadAction<IDialog[]>
     ) => {
-      const model: TModel = action.payload[0].model === 0 ? "gpt" : "image";
-      state.model = model;
+      const serverModel = action.payload[0].model;
+      if (serverModel === 0) {
+        state.model = "gpt";
+      } else if (serverModel === 1) {
+        state.model = "image";
+      }
       state.session = action.payload[0].session;
       const dialog: Dialog[] = [];
       action.payload.forEach((item) => {

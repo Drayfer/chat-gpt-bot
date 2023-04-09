@@ -14,11 +14,16 @@ export default function Upgrade() {
   const { data: session } = useSession();
   const { isPaid, paidTo } = useIsPaid();
 
-  const handleUpgrade = () => {
+  const handleUpgrade = async () => {
     if (!session) {
       router.push("/login");
     }
-    axios("/api/upgrade");
+    try {
+      const { data } = await axios("/api/upgrade");
+      if (data.response.checkout_url) {
+        router.push(data.response.checkout_url);
+      }
+    } catch (err) {}
   };
 
   return (
@@ -55,60 +60,73 @@ export default function Upgrade() {
             >
               {isPaid ? "Add 1 Month" : "Upgrade Plan"}
             </Button>
-            <div className="flex items-center">
+            <div className="flex items-start">
               <CheckCircleOutlined className="text-green-500 pr-2" />
-              Some text
+              <div>Available models:</div>
+              <div className="font-extrabold ml-2">
+                <div>gpt-3.5-turbo (with context),</div>
+                {/* <div>gpt-4 (in future),</div> */}
+                <div>Midjourney (downloading images)</div>
+              </div>
             </div>
             <div className="flex items-center">
               <CheckCircleOutlined className="text-green-500 pr-2" />
-              Some text
+              Conversation context support:{" "}
+              <span className="font-extrabold ml-2">yes</span>
             </div>
             <div className="flex items-center">
               <CheckCircleOutlined className="text-green-500 pr-2" />
-              Some text
+              No ads: <span className="font-extrabold ml-2">yes</span>
             </div>
             <div className="flex items-center">
               <CheckCircleOutlined className="text-green-500 pr-2" />
-              Some text
+              Without any restrictions:{" "}
+              <span className="font-extrabold ml-2">yes</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-green-500 pr-2" />
+              Web version: <span className="font-extrabold ml-2">yes</span>
             </div>
           </div>
-
-          {!isPaid && (
-            <>
-              <div className="px-4 md:hidden">
-                <Divider
-                  className="my-0 w-5/6"
-                  style={{
-                    borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
-                  }}
-                />
-              </div>
-              <div className="p-4 md:w-1/2 order-first">
-                <div className="text-xl font-bold flex justify-between">
-                  <div>Free Plan</div>
-                </div>
-                <Button className="bg-slate-600 hover:bg-slate-600 w-full mt-4 text-white/50 border-0 font-bold p-5 flex justify-center items-center mb-3">
-                  Your Current Plan
-                </Button>
-                <div className="flex items-center">
-                  <CheckCircleOutlined className="text-white/50 pr-2" />
-                  Some text
-                </div>
-                <div className="flex items-center">
-                  <CheckCircleOutlined className="text-white/50 pr-2" />
-                  Some text
-                </div>
-                <div className="flex items-center">
-                  <CheckCircleOutlined className="text-white/50 pr-2" />
-                  Some text
-                </div>
-                <div className="flex items-center">
-                  <CheckCircleOutlined className="text-white/50 pr-2" />
-                  Some text
-                </div>
-              </div>
-            </>
-          )}
+          <div className="px-4 md:hidden">
+            <Divider
+              className="my-0 w-5/6"
+              style={{
+                borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
+              }}
+            />
+          </div>
+          <div className="p-4 md:w-1/2 order-first">
+            <div className="text-xl font-bold flex justify-between">
+              <div>Free Plan</div>
+            </div>
+            <Button className="bg-slate-600 hover:bg-slate-600 w-full mt-4 text-white/50 border-0 font-bold p-5 flex justify-center items-center mb-3">
+              {isPaid ? "Default" : "Your Current Plan"}
+            </Button>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-white/50 pr-2" />
+              Available models:{" "}
+              <span className="font-extrabold ml-2">gpt-3.5-turbo</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-white/50 pr-2" />
+              Conversation context support:{" "}
+              <span className="font-extrabold ml-2">no</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-white/50 pr-2" />
+              No ads: <span className="font-extrabold ml-2">no</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-white/50 pr-2" />
+              Without any restrictions:{" "}
+              <span className="font-extrabold ml-2">no</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircleOutlined className="text-white/50 pr-2" />
+              Web version: <span className="font-extrabold ml-2">no</span>
+            </div>
+          </div>
         </div>
       </div>
       <div>

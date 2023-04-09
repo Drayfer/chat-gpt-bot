@@ -20,6 +20,7 @@ import { clearMessages, setModel } from "@/store/chatSlice";
 import Link from "next/link";
 import useIsPaid from "@/hooks/useIsPaid";
 import { useRouter } from "next/navigation";
+import useIsDesktop from "@/hooks/useIsDesktop";
 
 interface IMenu {
   isOpenMenu: boolean;
@@ -56,14 +57,15 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   const [history, setHistory] = useState<IHistory[]>([]);
   const { isPaid } = useIsPaid();
   const router = useRouter();
+  const { isDesktop } = useIsDesktop();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isOpenMenu) {
+    if (isOpenMenu || (isDesktop && currentChat.length === 2)) {
       getHistory().then((data) => setHistory(data));
     }
-  }, [isOpenMenu]);
+  }, [isOpenMenu, currentChat, isDesktop]);
 
   const handleChooseTitle = async (item: IHistory) => {
     if (item.model === 1 && !isPaid) {
@@ -71,11 +73,15 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
       return;
     }
     dispatch(fetchDialogHistory(item.session));
-    setIsOpenMenu(false);
+    if (!isDesktop) {
+      setIsOpenMenu(false);
+    }
   };
 
   const handleNewChat = () => {
-    setIsOpenMenu(false);
+    if (!isDesktop) {
+      setIsOpenMenu(false);
+    }
     dispatch(setModel("startGpt"));
     dispatch(clearMessages());
     dispatch(getChatSession());
@@ -103,8 +109,9 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
             New Chat
           </Button>
         }
+        mask={!isDesktop}
+        closable={!isDesktop}
         placement={"left"}
-        closable={false}
         onClose={() => setIsOpenMenu(false)}
         open={isOpenMenu}
         key={"left"}
@@ -154,14 +161,18 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
           </div>
         }
         extra={
-          <Space>
-            <Button
-              className="p-2 flex justify-center items-center border-0 text-white"
-              onClick={() => setIsOpenMenu(false)}
-            >
-              <CloseOutlined style={{ fontSize: 18 }} />
-            </Button>
-          </Space>
+          isDesktop ? (
+            <></>
+          ) : (
+            <Space>
+              <Button
+                className="p-2 flex justify-center items-center border-0 text-white"
+                onClick={() => setIsOpenMenu(false)}
+              >
+                <CloseOutlined style={{ fontSize: 18 }} />
+              </Button>
+            </Space>
+          )
         }
       >
         <div className="overflow-y-auto">

@@ -11,6 +11,7 @@ import Menu from "../menu/Menu";
 import { useAppDispatch } from "@/hooks/redux";
 import { clearMessages, setModel } from "@/store/chatSlice";
 import { getChatSession } from "@/store/requests/chat";
+import useIsDesktop from "@/hooks/useIsDesktop";
 
 interface IInputQuestion extends TextAreaProps {
   onSendQuestion: () => void;
@@ -22,14 +23,17 @@ const InputQuestion = (props: IInputQuestion) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const dispatch = useAppDispatch();
-
+  const { isDesktop } = useIsDesktop();
   const isValue =
     activeField ||
     (value?.toString() && value?.toString().length > 0 ? true : false);
 
   return (
     <>
-      <Menu setIsOpenMenu={setIsOpenMenu} isOpenMenu={isOpenMenu} />
+      {!isDesktop && (
+        <Menu setIsOpenMenu={setIsOpenMenu} isOpenMenu={isOpenMenu} />
+      )}
+
       <div className="relative">
         <TextArea
           {...params}
@@ -37,16 +41,17 @@ const InputQuestion = (props: IInputQuestion) => {
           placeholder="Ask something..."
           autoSize={{ minRows: 1, maxRows: 6 }}
           className={classnames(
-            "w-full rounded-sm m-0 border-0 text-lg bg-slate-500 pl-10 pr-10 py-2 text-[#D1D5DA] placeholder:text-slate-400",
+            "w-full rounded-sm m-0 border-0 text-lg bg-slate-500 pr-10 py-2 text-[#D1D5DA] placeholder:text-slate-400",
             {
               "pl-2 pr-8": isValue,
+              "pl-10": !isDesktop,
             }
           )}
           style={{ resize: "none" }}
           onFocus={() => setActiveField(true)}
           onBlur={() => setActiveField(false)}
         />
-        {!isValue ? (
+        {!isValue && !isDesktop ? (
           <button
             className="px-3 absolute bg-transparent resize-none left-0 bottom-0 flex justify-center items-center h-full"
             onClick={(e) => {

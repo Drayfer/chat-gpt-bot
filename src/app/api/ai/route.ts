@@ -6,6 +6,12 @@ export interface Question {
   question: string;
   chatSession: number;
   model: number;
+  isPaid?: boolean;
+}
+
+interface GPTDialog {
+  role: "user" | "assistant" | "system";
+  content: string | null;
 }
 
 export interface UserSession {
@@ -27,6 +33,39 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    let context: GPTDialog[] = [];
+    if (body.isPaid) {
+      const user = await client.user.findUnique({
+        where: {
+          email,
+        },
+      });
+      const messages = await client.chat.findMany({
+        where: {
+          userId: user?.id,
+          session: body.chatSession,
+        },
+        take: 3,
+        select: {
+          message: true,
+          answer: true,
+          session: true,
+          createdAt: true,
+          model: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      const dialog: GPTDialog[] = [];
+      messages.forEach((item) => {
+        dialog.unshift({ role: "assistant", content: item.answer });
+        dialog.unshift({ role: "user", content: item.message });
+      });
+      context = [...dialog];
+    }
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +74,7 @@ export async function POST(request: Request) {
       method: "POST",
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: body.question }],
+        messages: [...context, { role: "user", content: body.question }],
         temperature: 0.8,
         max_tokens: 700,
       }),

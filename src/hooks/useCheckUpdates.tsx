@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { updateVersion } from "@/store/messagesSlice";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
+import useIsPaid from "./useIsPaid";
 
 const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
 
@@ -15,6 +16,7 @@ export default function useCheckUpdates() {
   const [isUpdate, setIsUpdate] = useState(false);
   const sameValueRef = useRef(versionNative);
   const { data: session } = useSession();
+  const { isPaid } = useIsPaid();
 
   const dispatch = useAppDispatch();
 
@@ -56,9 +58,11 @@ export default function useCheckUpdates() {
             const webViewNotification = {
               adv: "banner",
             };
-            window.ReactNativeWebView.postMessage(
-              JSON.stringify(webViewNotification)
-            );
+            if (!isPaid) {
+              window.ReactNativeWebView.postMessage(
+                JSON.stringify(webViewNotification)
+              );
+            }
           }
         }
       }, 10000);
