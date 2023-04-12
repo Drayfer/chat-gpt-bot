@@ -1,6 +1,11 @@
-import Link from "next/link";
+"use client";
+
+import Link from "@/components/Link";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("footer");
+
   return (
     <div>
       <div className="h-[1px] bg-slate-300/50 mb-3 mt-6" />
@@ -11,25 +16,25 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Developer&apos;s Page
+          {t("developer")}
         </Link>
         <Link
           className="text-white font-bold w-1/2 md:w-1/4 text-center mb-3"
           href="/upgrade"
         >
-          Price
+          {t("price")}
         </Link>
         <Link
           className="text-white font-bold w-1/2 md:w-1/4 text-center mb-3"
           href="/agreement"
         >
-          Agreement
+          {t("agreement")}
         </Link>
         <Link
           className="text-white font-bold w-1/2 md:w-1/4 text-center mb-3"
           href="/privacy"
         >
-          Privacy
+          {t("privacy")}
         </Link>
       </div>
     </div>

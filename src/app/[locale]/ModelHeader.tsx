@@ -2,6 +2,7 @@
 import { useAppSelector } from "@/hooks/redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
+import { useTranslations } from "next-intl";
 
 interface IModelHeader {
   handleNewChat: () => void;
@@ -11,13 +12,14 @@ export default function ModelHeader({ handleNewChat }: IModelHeader) {
   const { model } = useAppSelector((state) => ({
     model: state.chat.model,
   }));
+  const t = useTranslations("app");
 
   const modelInfo = model === "image" ? "Midjourney" : "gpt-3.5-turbo";
 
   return (
     <div className="p-2 py-0 border-2 border-white/20 text-white/50 text-xs flex justify-between items-center">
       <div>
-        <span className="font-light">Chat Model:</span>{" "}
+        <span className="font-light">{t("model")}:</span>{" "}
         <span className="font-bold">{modelInfo}</span>
       </div>
       <Button

@@ -1,6 +1,6 @@
 "use client";
 
-import Send from "@/app/svg/send";
+import Send from "@/app/[locale]/svg/send";
 import { Input } from "antd";
 import { TextAreaProps } from "antd/es/input";
 const { TextArea } = Input;
@@ -12,6 +12,7 @@ import { useAppDispatch } from "@/hooks/redux";
 import { clearMessages, setModel } from "@/store/chatSlice";
 import { getChatSession } from "@/store/requests/chat";
 import useIsDesktop from "@/hooks/useIsDesktop";
+import { useTranslations } from "next-intl";
 
 interface IInputQuestion extends TextAreaProps {
   onSendQuestion: () => void;
@@ -21,6 +22,7 @@ const InputQuestion = (props: IInputQuestion) => {
   const { onSendQuestion, value, ...params } = props;
   const [activeField, setActiveField] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const t = useTranslations("app");
 
   const dispatch = useAppDispatch();
   const { isDesktop } = useIsDesktop();
@@ -38,7 +40,7 @@ const InputQuestion = (props: IInputQuestion) => {
         <TextArea
           {...params}
           value={value}
-          placeholder="Ask something..."
+          placeholder={`${t("something")}...`}
           autoSize={{ minRows: 1, maxRows: 6 }}
           className={classnames(
             "w-full rounded-sm m-0 border-0 text-lg bg-slate-500 pr-10 py-2 text-[#D1D5DA] placeholder:text-slate-400",

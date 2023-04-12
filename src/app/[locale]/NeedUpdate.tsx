@@ -1,6 +1,6 @@
 "use client";
+import Link from "@/components/Link";
 import Image from "next/image";
-import Link from "next/link";
 import PlayMarket from "./images/playMarket.webp";
 
 export default function NeedUpdate() {

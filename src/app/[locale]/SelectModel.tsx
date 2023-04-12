@@ -1,15 +1,17 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppDispatch } from "@/hooks/redux";
 import useIsPaid from "@/hooks/useIsPaid";
 import { setModel, TModel } from "@/store/chatSlice";
 import { CrownOutlined } from "@ant-design/icons";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 export default function SelectModel() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isPaid } = useIsPaid();
+  const t = useTranslations("app");
 
   const handleModel = (modelType: TModel) => {
     if (modelType === "image" && !isPaid) {
@@ -23,16 +25,14 @@ export default function SelectModel() {
     <>
       <div className="flex justify-center items-center flex-col h-full">
         <p className="text-4xl mb-3 font-bold">GPT AI Chat Bot</p>
-        <p className="text-xl mb-3 font-extralight">Choose Model:</p>
+        <p className="text-xl mb-3 font-extralight">{t("choose")}:</p>
 
         <div
           className="flex flex-col justify-center items-center bg-slate-500 p-4 mb-4 cursor-pointer w-72"
           onClick={() => handleModel("gpt")}
         >
           <div className="text-lg font-bold mb-2">Open AI</div>
-          <div className="text-sm font-light">
-            Text chat with GPT AI Chat Bot assistent
-          </div>
+          <div className="text-sm font-light text-center">{t("textAi")}</div>
         </div>
 
         {/* <div
@@ -66,7 +66,7 @@ export default function SelectModel() {
             />{" "}
             Midjourney
           </div>
-          <div className="text-sm font-light">Generate Images Model</div>
+          <div className="text-sm font-light">{t("textImage")}</div>
         </div>
       </div>
     </>

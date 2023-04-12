@@ -10,18 +10,19 @@ import {
   QuestionCircleOutlined,
   FileImageOutlined,
   CrownOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import LogoutSvg from "@/app/svg/logoutSvg";
+import LogoutSvg from "@/app/[locale]/svg/logoutSvg";
 import { signOut } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchDialogHistory, getChatSession } from "@/store/requests/chat";
 import { clearMessages, setModel } from "@/store/chatSlice";
-import Link from "next/link";
 import useIsPaid from "@/hooks/useIsPaid";
 import { useRouter } from "next/navigation";
 import useIsDesktop from "@/hooks/useIsDesktop";
-
+import Link from "@/components/Link";
+import { useTranslations } from "next-intl";
 interface IMenu {
   isOpenMenu: boolean;
   setIsOpenMenu: Dispatch<SetStateAction<boolean>>;
@@ -58,6 +59,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   const { isPaid } = useIsPaid();
   const router = useRouter();
   const { isDesktop } = useIsDesktop();
+  const t = useTranslations("app");
 
   const dispatch = useAppDispatch();
 
@@ -106,11 +108,11 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
             onClick={handleNewChat}
           >
             <PlusOutlined />
-            New Chat
+            {t("newChat")}
           </Button>
         }
         mask={!isDesktop}
-        closable={!isDesktop}
+        closable={false}
         placement={"left"}
         onClose={() => setIsOpenMenu(false)}
         open={isOpenMenu}
@@ -136,7 +138,14 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 className="text-[#FFBA00]"
                 style={{ fontSize: 18, paddingLeft: 5 }}
               />
-              {isPaid ? "PRO" : "Upgrade to Pro"}
+              {isPaid ? t("pro") : t("upgrade")}
+            </Link>
+            <Link
+              className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
+              href={"/settings"}
+            >
+              <SettingOutlined style={{ fontSize: 18, paddingLeft: 5 }} />
+              {t("settings")}
             </Link>
             <Button
               className="flex justify-start items-center border-0 text-white gap-1 mb-2 bg-transparent"
@@ -147,7 +156,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
               <QuestionCircleOutlined
                 style={{ fontSize: 18, paddingLeft: 5 }}
               />
-              Developer&apos;s Page
+              {t("dev")}
             </Button>
             <Button
               className="flex justify-start border-0 text-white gap-2"
@@ -156,7 +165,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
               <span className="pr-1">
                 <LogoutSvg />
               </span>{" "}
-              Log out
+              {t("logOut")}
             </Button>
           </div>
         }

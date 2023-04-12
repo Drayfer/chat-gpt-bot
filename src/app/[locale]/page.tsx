@@ -5,7 +5,7 @@ import { Comment, RotatingLines } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
 import AIimg from "./svg/ai.webp";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import InputQuestion from "@/components/input/InputQuestion";
 import EmptyDialog from "./EmptyDialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -22,6 +22,7 @@ import Sidebar from "./Sidebar";
 import useIsDesktop from "@/hooks/useIsDesktop";
 import ModelHeader from "./ModelHeader";
 import useIsPaid from "@/hooks/useIsPaid";
+import { useLocale, useTranslations } from "next-intl";
 
 export interface Dialog {
   who: "bot" | "me";
@@ -66,10 +67,11 @@ export default function Home() {
       isLoadUserInfo: state.messages.loading,
     })
   );
-
+  const t = useTranslations("app");
   const { isUpdate } = useCheckUpdates();
   const { isDesktop } = useIsDesktop();
   const { isPaid } = useIsPaid();
+  const locale = useLocale();
 
   const [input, setInput] = useState("");
   const [scroll, setScroll] = useState(false);
@@ -93,7 +95,7 @@ export default function Home() {
           dispatch(
             addMessage({
               who: "bot",
-              text: "Something went wrong, please ask again",
+              text: t("error"),
             })
           );
           const lastMyMessage = currentChat
@@ -137,7 +139,6 @@ export default function Home() {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
   };
-
   useEffect(() => {
     if (scroll || isTyping) {
       scrollToBottom();
@@ -168,7 +169,7 @@ export default function Home() {
   };
 
   if (!session) {
-    redirect("/login");
+    redirect(`/${locale}/login`);
   }
 
   const handleSendQuestion = () => {
@@ -254,7 +255,7 @@ export default function Home() {
                       {model === "image" ? (
                         <>
                           {item.text === "error" || !item.text.length ? (
-                            "Something went wrong, please ask again"
+                            t("error")
                           ) : (
                             <div className="flex flex-col items-center">
                               <BotImageMessage link={item.text} chatRef={ref} />
@@ -283,7 +284,7 @@ export default function Home() {
                 backgroundColor="#0BA37F"
               />
               <div className="ml-3">
-                {model === "image" ? "generate" : "typing"}...
+                {model === "image" ? t("generate") : t("typing")}...
               </div>
             </div>
           )}
