@@ -17,8 +17,6 @@ export default function Login() {
       </div>
       <h1 className="text-3xl mb-6 font-bold">{t("p1")}</h1>
 
-      <p className="mb-6">{t("p2")}</p>
-
       <h2 className="text-2xl mb-6 font-bold">1. {t("p3")}</h2>
       <p className="mb-6">1.1. {t("p4")}</p>
 
@@ -47,9 +45,15 @@ export default function Login() {
       <p className="mb-6">6.1. {t("p21")}</p>
       <p className="mb-6">6.2. {t("p22")}</p>
 
-      <h2 className="text-2xl mb-6 font-bold">7. {t("p23")}</h2>
-      <p className="mb-6">7.1. {t("p24")}</p>
-      <p className="mb-6">7.2. {t("p25")}</p>
+      <h2 className="text-2xl mb-6 font-bold">7. {t("p30")}</h2>
+      <p className="mb-6">7.1. {t("p31")}</p>
+      <p className="mb-6">7.2. {t("p32")}</p>
+      <ul className="mb-6 ml-2">
+        <li className="mb-6">7.2.1. {t("p33")}</li>
+        <li className="mb-6">7.2.2. {t("p34")}</li>
+      </ul>
+
+      {/* <p className="mb-6">7.1. {t("p25")}</p> */}
 
       <h2 className="text-2xl mb-6 font-bold">8. {t("p26")}</h2>
       <p className="mb-6">8.1. {t("p27")}</p>

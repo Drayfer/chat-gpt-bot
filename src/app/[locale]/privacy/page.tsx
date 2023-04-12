@@ -53,10 +53,10 @@ export default function Login() {
       <h2 className="text-xl mb-6 font-bold">{t("p15")}</h2>
       <p className="mb-6">{t("p16")}</p>
       <ul className="mb-6">
-        <li>{t("p17")};</li>
-        <li>{t("p18")};</li>
-        <li>{t("p19")};</li>
-        <li>{t("p20")}.</li>
+        <li>{t("p17")}</li>
+        <li>{t("p18")}</li>
+        <li>{t("p19")}</li>
+        <li>{t("p20")}</li>
       </ul>
       <p className="mb-6">{t("p21")}</p>
 

@@ -87,7 +87,12 @@
     "p26": "Miscellaneous",
     "p27": "This Agreement constitutes the entire agreement between the parties and supersedes all prior agreements and understandings, whether written or oral, relating to the subject matter of this Agreement.",
     "p28": "GPT AI Chat Bot has the right to assign this Agreement to a third party without the User's consent.",
-    "p29": "If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect."
+    "p29": "If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.",
+    "p30": "Refund policy",
+    "p31": "Since the services we provide are not material and are not subject to change, we do not carry out the return of the service, after it was paid and transferred to the customer. As a customer, you are responsible for your decision to buy the proposed service in the form in which it is offered on our website, without any changes or additions.",
+    "p32": "Taking into account the above, we can return the service under the circumstances below:",
+    "p33": "The service was not provided. For any reason, the service was not provided. In this case, we recommend that we contact our support service to receive assistance.",
+    "p34": "Incorrigible sho,rtcomings of the service. Although all services are tested, we do not exclude the possibility of errors. You need to contact our support service within 72 hours from the date of transfer of a report on the results of the service."
   },
   "upgrade": {
     "back": "Back",
@@ -131,6 +136,12 @@
   },
   "settings": {
     "back": "Back",
-    "settings": "Settings"
+    "settings": "Settings",
+    "p1": "Choose language"
+  },
+  "contacts": {
+    "back": "Back",
+    "contacts": "Contact Information",
+    "p1": "Developer's page"
   }
 }
