@@ -1,4 +1,4 @@
-import { Dialog } from "@/app/page";
+import { Dialog } from "@/app/[locale]/page";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchDialogHistory, getChatSession } from "./requests/chat";
 
