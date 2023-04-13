@@ -23,6 +23,7 @@ import useIsDesktop from "@/hooks/useIsDesktop";
 import ModelHeader from "./ModelHeader";
 import useIsPaid from "@/hooks/useIsPaid";
 import { useLocale, useTranslations } from "next-intl";
+import { accessEmails } from "@/components/constants";
 
 export interface Dialog {
   who: "bot" | "me";

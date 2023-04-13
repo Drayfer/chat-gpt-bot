@@ -37,12 +37,12 @@ export async function POST(request: Request) {
     const model =
       "prompthero/openjourney:9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb";
     const input = { prompt: `mdjrny-v4 style ${body.question} 8k` };
-    // const output = (await replicate.run(model, {
-    //   input,
-    // })) as string[];
-    const output = [
-      "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
-    ];
+    const output = (await replicate.run(model, {
+      input,
+    })) as string[];
+    // const output = [
+    //   "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+    // ];
 
     if (!output[0]?.length) {
       return NextResponse.json("no length", { status: 500 });

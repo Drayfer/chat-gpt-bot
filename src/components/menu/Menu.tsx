@@ -14,7 +14,7 @@ import {
 } from "@ant-design/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LogoutSvg from "@/app/[locale]/svg/logoutSvg";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchDialogHistory, getChatSession } from "@/store/requests/chat";
 import { clearMessages, setModel } from "@/store/chatSlice";
@@ -22,7 +22,8 @@ import useIsPaid from "@/hooks/useIsPaid";
 import { useRouter } from "next/navigation";
 import useIsDesktop from "@/hooks/useIsDesktop";
 import Link from "@/components/Link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { accessEmails } from "../constants";
 interface IMenu {
   isOpenMenu: boolean;
   setIsOpenMenu: Dispatch<SetStateAction<boolean>>;
@@ -60,6 +61,9 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
   const router = useRouter();
   const { isDesktop } = useIsDesktop();
   const t = useTranslations("app");
+  const locale = useLocale();
+
+  const { data: session } = useSession();
 
   const dispatch = useAppDispatch();
 
@@ -71,7 +75,7 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
 
   const handleChooseTitle = async (item: IHistory) => {
     if (item.model === 1 && !isPaid) {
-      router.push("/upgrade");
+      router.push(`/${locale}/upgrade`);
       return;
     }
     dispatch(fetchDialogHistory(item.session));
@@ -130,16 +134,19 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
               }}
             />
-            <Link
-              className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
-              href={"/upgrade"}
-            >
-              <CrownOutlined
-                className="text-[#FFBA00]"
-                style={{ fontSize: 18, paddingLeft: 5 }}
-              />
-              {isPaid ? t("pro") : t("upgrade")}
-            </Link>
+            {accessEmails.includes(session?.user?.email || " ") && (
+              <Link
+                className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
+                href={"/upgrade"}
+              >
+                <CrownOutlined
+                  className="text-[#FFBA00]"
+                  style={{ fontSize: 18, paddingLeft: 5 }}
+                />
+                {isPaid ? t("pro") : t("upgrade")}
+              </Link>
+            )}
+
             <Link
               className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
               href={"/settings"}
