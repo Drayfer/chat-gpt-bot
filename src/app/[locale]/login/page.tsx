@@ -3,7 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import GoogleSvg from "./svg/googleSvg";
-import AIimg from "../svg/ai.webp";
+import AIimg from "../../image/ai.webp";
 import Image from "next/image";
 import Footer from "./Footer";
 import { useLocale, useTranslations } from "next-intl";
