@@ -68,7 +68,7 @@ export default function useCheckUpdates() {
       }, 10000);
       return () => clearTimeout(timeoutId);
     }
-  }, [session]);
+  }, [session, isPaid]);
 
   return { isUpdate };
 }
