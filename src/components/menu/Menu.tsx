@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import useIsDesktop from "@/hooks/useIsDesktop";
 import Link from "@/components/Link";
 import { useLocale, useTranslations } from "next-intl";
-import { accessEmails } from "../constants";
+
 interface IMenu {
   isOpenMenu: boolean;
   setIsOpenMenu: Dispatch<SetStateAction<boolean>>;
@@ -134,18 +134,17 @@ const Menu = ({ isOpenMenu, setIsOpenMenu }: IMenu) => {
                 borderBlockStart: "1px solid rgba(214, 214, 214, 0.493)",
               }}
             />
-            {accessEmails.includes(session?.user?.email || " ") && (
-              <Link
-                className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
-                href={"/upgrade"}
-              >
-                <CrownOutlined
-                  className="text-[#FFBA00]"
-                  style={{ fontSize: 18, paddingLeft: 5 }}
-                />
-                {isPaid ? t("pro") : t("upgrade")}
-              </Link>
-            )}
+
+            <Link
+              className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"
+              href={"/upgrade"}
+            >
+              <CrownOutlined
+                className="text-[#FFBA00]"
+                style={{ fontSize: 18, paddingLeft: 5 }}
+              />
+              {isPaid ? t("pro") : t("upgrade")}
+            </Link>
 
             <Link
               className="flex justify-start items-center border-0 text-white gap-3 mb-2 px-4 py-1 hover:text-white/70"

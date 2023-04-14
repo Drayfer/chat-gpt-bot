@@ -1,11 +1,9 @@
 "use client";
 
-import { accessEmails } from "@/components/constants";
 import { useAppDispatch } from "@/hooks/redux";
 import useIsPaid from "@/hooks/useIsPaid";
 import { setModel, TModel } from "@/store/chatSlice";
 import { CrownOutlined } from "@ant-design/icons";
-import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +13,6 @@ export default function SelectModel() {
   const { isPaid } = useIsPaid();
   const t = useTranslations("app");
   const locale = useLocale();
-  const { data: session } = useSession();
 
   const handleModel = (modelType: TModel) => {
     if (modelType === "image" && !isPaid) {
@@ -56,23 +53,21 @@ export default function SelectModel() {
             Last version of GPT AI Chat Bot assistent
           </div>
         </div> */}
-        {accessEmails.includes(session?.user?.email || " ") && (
-          <div
-            className={`flex flex-col justify-center items-center bg-slate-500 ${
-              isPaid ? "opacity-100" : "opacity-60"
-            } p-4 cursor-pointer w-72`}
-            onClick={() => handleModel("image")}
-          >
-            <div className="text-lg font-bold mb-2 flex items-center">
-              <CrownOutlined
-                className="text-[#FFBA00] mr-2"
-                style={{ fontSize: 18, paddingLeft: 5 }}
-              />{" "}
-              Midjourney
-            </div>
-            <div className="text-sm font-light">{t("textImage")}</div>
+        <div
+          className={`flex flex-col justify-center items-center bg-slate-500 ${
+            isPaid ? "opacity-100" : "opacity-60"
+          } p-4 cursor-pointer w-72`}
+          onClick={() => handleModel("image")}
+        >
+          <div className="text-lg font-bold mb-2 flex items-center">
+            <CrownOutlined
+              className="text-[#FFBA00] mr-2"
+              style={{ fontSize: 18, paddingLeft: 5 }}
+            />{" "}
+            Midjourney
           </div>
-        )}
+          <div className="text-sm font-light">{t("textImage")}</div>
+        </div>
       </div>
     </>
   );
