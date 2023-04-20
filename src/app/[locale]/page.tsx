@@ -154,12 +154,14 @@ export default function Home() {
 
   useEffect(() => {
     handleNewChat();
-    setUserInfo();
+    setUserInfo().then(() => {
+      showFullAds();
+    });
     //eslint-disable-next-line
   }, []);
 
-  const setUserInfo = () => {
-    dispatch(fetchUserData());
+  const setUserInfo = async () => {
+    await dispatch(fetchUserData());
   };
 
   const handleNewChat = () => {
@@ -192,7 +194,6 @@ export default function Home() {
   useEffect(() => {
     if (currentChat.length === 1) {
       showFullAds();
-      console.log(111);
     }
     //eslint-disable-next-line
   }, [currentChat]);

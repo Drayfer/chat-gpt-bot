@@ -9,8 +9,9 @@ import useIsPaid from "./useIsPaid";
 const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
 
 export default function useCheckUpdates() {
-  const { versionNative } = useAppSelector((state) => ({
+  const { versionNative, loading } = useAppSelector((state) => ({
     versionNative: state.messages.versionNative,
+    loading: state.messages.loading,
   }));
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -44,6 +45,7 @@ export default function useCheckUpdates() {
       adv: "bannerFull",
     };
     if (
+      !loading &&
       !isPaid &&
       window.ReactNativeWebView &&
       window.navigator.userAgent.includes(AGENT)
@@ -56,7 +58,6 @@ export default function useCheckUpdates() {
 
   useEffect(() => {
     if (session) {
-      showFullAds();
       const timeoutId = setTimeout(() => {
         if (
           (sameValueRef.current !== process.env.VERSION &&
