@@ -159,9 +159,13 @@ export default function Home() {
   }, []);
 
   const setUserInfo = () => {
-    dispatch(fetchUserData()).then(() => {
-      showFullAds();
-    });
+    dispatch(fetchUserData())
+      .unwrap()
+      .then((e) => {
+        if (!e?.paid) {
+          showFullAds();
+        }
+      });
   };
 
   const handleNewChat = () => {
