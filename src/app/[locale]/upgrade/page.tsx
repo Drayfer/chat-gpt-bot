@@ -3,7 +3,6 @@ import { CheckCircleOutlined, CrownOutlined } from "@ant-design/icons";
 import { Button, Divider } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Footer from "../login/Footer";
 import useIsPaid from "@/hooks/useIsPaid";
 import moment from "moment";
@@ -19,13 +18,9 @@ export default function Upgrade() {
   const handleUpgrade = async () => {
     if (!session) {
       router.push("/login");
+      return;
     }
-    try {
-      const { data } = await axios("/api/upgrade");
-      if (data.response.checkout_url) {
-        router.push(data.response.checkout_url);
-      }
-    } catch (err) {}
+    window.open("https://donate.stream/yoomoney410011297881154", "_blank");
   };
 
   return (
