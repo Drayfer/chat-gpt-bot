@@ -68,7 +68,7 @@ export default function Home() {
     })
   );
   const t = useTranslations("app");
-  const { isUpdate } = useCheckUpdates();
+  const { isUpdate, showFullAds } = useCheckUpdates();
   const { isDesktop } = useIsDesktop();
   const { isPaid } = useIsPaid();
   const locale = useLocale();
@@ -188,6 +188,14 @@ export default function Home() {
     // }
     setInput(e.target.value);
   };
+
+  useEffect(() => {
+    if (currentChat.length === 1) {
+      showFullAds();
+      console.log(111);
+    }
+    //eslint-disable-next-line
+  }, [currentChat]);
 
   if (isUpdate) {
     return <NeedUpdate />;

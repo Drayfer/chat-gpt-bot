@@ -39,11 +39,15 @@ export default function useCheckUpdates() {
     };
   }, [versionNative, dispatch]);
 
-  const showAdsOnStart = () => {
+  const showFullAds = () => {
     const webViewNotification = {
       adv: "bannerFull",
     };
-    if (!isPaid) {
+    if (
+      !isPaid &&
+      window.ReactNativeWebView &&
+      window.navigator.userAgent.includes(AGENT)
+    ) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify(webViewNotification)
       );
@@ -52,7 +56,7 @@ export default function useCheckUpdates() {
 
   useEffect(() => {
     if (session) {
-      showAdsOnStart();
+      showFullAds();
       const timeoutId = setTimeout(() => {
         if (
           (sameValueRef.current !== process.env.VERSION &&
@@ -80,7 +84,8 @@ export default function useCheckUpdates() {
       }, 10000);
       return () => clearTimeout(timeoutId);
     }
+    //eslint-disable-next-line
   }, [session, isPaid]);
 
-  return { isUpdate };
+  return { isUpdate, showFullAds };
 }
