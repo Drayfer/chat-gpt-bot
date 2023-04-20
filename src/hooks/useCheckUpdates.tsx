@@ -39,8 +39,20 @@ export default function useCheckUpdates() {
     };
   }, [versionNative, dispatch]);
 
+  const showAdsOnStart = () => {
+    const webViewNotification = {
+      adv: "bannerFull",
+    };
+    if (!isPaid) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify(webViewNotification)
+      );
+    }
+  };
+
   useEffect(() => {
     if (session) {
+      showAdsOnStart();
       const timeoutId = setTimeout(() => {
         if (
           (sameValueRef.current !== process.env.VERSION &&
