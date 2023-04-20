@@ -8,6 +8,7 @@ const nextConfig = {
     VERSION: process.env.VERSION,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
