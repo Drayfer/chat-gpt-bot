@@ -154,14 +154,14 @@ export default function Home() {
 
   useEffect(() => {
     handleNewChat();
-    setUserInfo().then(() => {
-      showFullAds();
-    });
+    setUserInfo();
     //eslint-disable-next-line
   }, []);
 
-  const setUserInfo = async () => {
-    await dispatch(fetchUserData());
+  const setUserInfo = () => {
+    dispatch(fetchUserData()).then(() => {
+      showFullAds();
+    });
   };
 
   const handleNewChat = () => {
