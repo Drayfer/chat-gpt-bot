@@ -163,7 +163,7 @@ export default function Home() {
       .unwrap()
       .then((e) => {
         if (!e?.paid) {
-          showFullAds();
+          // showFullAds();
         }
       });
   };
