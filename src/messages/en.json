@@ -116,7 +116,7 @@
     "p17": "no"
   },
   "app": {
-    "error": "Something went wrong, please ask again",
+    "error": "Something went wrong, please ask again later",
     "generate": "generate",
     "typing": "typing",
     "newChat": "New Chat",

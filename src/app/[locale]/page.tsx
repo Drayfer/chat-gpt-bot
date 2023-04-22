@@ -89,6 +89,9 @@ export default function Home() {
       const modelType = 0;
       askAi(question, chatSession, modelType, isPaid)
         .then((answer) => {
+          if (!answer) {
+            throw new Error();
+          }
           dispatch(addMessage({ who: "bot", text: answer }));
         })
         .catch((err) => {
@@ -163,7 +166,7 @@ export default function Home() {
       .unwrap()
       .then((e) => {
         if (!e?.paid) {
-          // showFullAds();
+          showFullAds();
         }
       });
   };
