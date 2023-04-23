@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import useIsPaid from "./useIsPaid";
 
-const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
+export const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
 
 export default function useCheckUpdates() {
   const { versionNative, loading } = useAppSelector((state) => ({

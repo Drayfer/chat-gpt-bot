@@ -14,7 +14,7 @@ import { setModel } from "@/store/chatSlice";
 import ImageStartDialog from "./ImageStartDialog";
 import { addMessage, clearMessages } from "@/store/chatSlice";
 import NeedUpdate from "./NeedUpdate";
-import useCheckUpdates from "@/hooks/useCheckUpdates";
+import useCheckUpdates, { AGENT } from "@/hooks/useCheckUpdates";
 import SelectModel from "./SelectModel";
 import BotImageMessage from "./BotImageMessage";
 import { fetchUserData } from "@/store/requests/user";
@@ -23,6 +23,7 @@ import useIsDesktop from "@/hooks/useIsDesktop";
 import ModelHeader from "./ModelHeader";
 import useIsPaid from "@/hooks/useIsPaid";
 import { useLocale, useTranslations } from "next-intl";
+import NoWebAccess from "./NoWebAccess";
 
 export interface Dialog {
   who: "bot" | "me";
@@ -76,6 +77,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [scroll, setScroll] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [noWebAccess, setNoWebAccess] = useState(false);
 
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
@@ -167,6 +169,13 @@ export default function Home() {
       .then((e) => {
         if (!e?.paid) {
           showFullAds();
+          if (
+            !window.navigator.userAgent.includes(AGENT) &&
+            session?.user?.email &&
+            !process.env.ACCESS_EMAIL?.includes(session.user.email)
+          ) {
+            setNoWebAccess(true);
+          }
         }
       });
   };
@@ -204,6 +213,10 @@ export default function Home() {
     }
     //eslint-disable-next-line
   }, [currentChat]);
+
+  if (noWebAccess) {
+    return <NoWebAccess />;
+  }
 
   if (isUpdate) {
     return <NeedUpdate />;

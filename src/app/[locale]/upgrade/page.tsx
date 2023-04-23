@@ -45,6 +45,19 @@ export default function Upgrade() {
             </span>
           </div>
         )}
+        {isPaid && (
+          <div className="flex justify-center items-center mb-5 text-lg">
+            {t("p18")}:{" "}
+            <Link
+              className="font-bold underline ml-1"
+              href="http://ai-gpt.icu/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              http://ai-gpt.icu/
+            </Link>
+          </div>
+        )}
         <div className="md:flex md:flex-row md:space-x-4 bg-[#202123] lg:mx-40">
           <div className="p-4 md:w-1/2">
             <div className="text-xl font-bold flex justify-between">
