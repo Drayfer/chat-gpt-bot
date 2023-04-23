@@ -132,7 +132,8 @@
     "askImage": "Describe in detail what Image you want to generate.",
     "useEng": "Use English language",
     "something": "Ask something",
-    "settings": "Settings"
+    "settings": "Settings",
+    "download": "Download Image"
   },
   "settings": {
     "back": "Back",

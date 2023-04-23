@@ -24,7 +24,7 @@ export default function Page() {
         / {t("settings")}
       </div>
       <div className="flex justify-center items-center flex-col flex-1">
-        <h1 className="text-xl mb-6 font-bold">Choose language:</h1>
+        <h1 className="text-xl mb-6 font-bold">{t("p1")}:</h1>
         <Radio.Group
           value={language}
           onChange={handleSelect}

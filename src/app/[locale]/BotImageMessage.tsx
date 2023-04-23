@@ -5,6 +5,7 @@ import { RefObject, Suspense, useState } from "react";
 import EmptyImage from "./images/empty-image.png";
 import { saveAs } from "file-saver";
 import { RotatingLines } from "react-loader-spinner";
+import { useTranslations } from "next-intl";
 
 export interface IBotImageMessage {
   link: string;
@@ -12,6 +13,7 @@ export interface IBotImageMessage {
 }
 
 export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
+  const t = useTranslations("app");
   const [isValidImage, setIsValidImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -79,7 +81,7 @@ export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
               className="mt-3 text-white/70"
               onClick={() => saveFile(link)}
             >
-              Download Image
+              {t("download")}
             </Button>
           </>
         ) : (
