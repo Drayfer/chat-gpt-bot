@@ -113,7 +113,8 @@
     "p14": "Free Plan",
     "p15": "Default",
     "p16": "Your Current Plan",
-    "p17": "no"
+    "p17": "no",
+    "p18": "Web version"
   },
   "app": {
     "error": "Something went wrong, please ask again later",
@@ -133,7 +134,8 @@
     "useEng": "Use English language",
     "something": "Ask something",
     "settings": "Settings",
-    "download": "Download Image"
+    "download": "Download Image",
+    "noWebAccess": "No access to the web version"
   },
   "settings": {
     "back": "Back",
