@@ -6,6 +6,7 @@ import EmptyImage from "./images/empty-image.png";
 import { saveAs } from "file-saver";
 import { RotatingLines } from "react-loader-spinner";
 import { useTranslations } from "next-intl";
+import Link from "@/components/Link";
 
 export interface IBotImageMessage {
   link: string;
@@ -77,12 +78,20 @@ export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
               alt="generated_image"
             />
 
-            <Button
+            {/* <Button
               className="mt-3 text-white/70"
               onClick={() => saveFile(link)}
+            > */}
+            <Link
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 text-white/70 underline"
             >
               {t("download")}
-            </Button>
+            </Link>
+
+            {/* </Button> */}
           </>
         ) : (
           <NextImage
