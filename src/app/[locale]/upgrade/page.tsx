@@ -65,12 +65,12 @@ export default function Upgrade() {
               <div>{isPaid ? "Your Current Plan" : "Pro Plan"}</div>
               <div className="text-slate-400">10$/{t("p3")}</div>
             </div>
-            <Button
-              className="bg-green-600 hover:bg-green-600/90 w-full mt-4 text-white border-0 font-bold p-5 flex justify-center items-center mb-3"
-              onClick={handleUpgrade}
+            <Link
+              href={"/pay"}
+              className="bg-green-600 hover:bg-green-600/90 w-full mt-4 text-white border-0 font-bold p-2 flex justify-center items-center mb-3 rounded-md"
             >
               {isPaid ? t("p4") : t("p5")}
-            </Button>
+            </Link>
             <div className="flex items-start">
               <CheckCircleOutlined className="text-green-500 pr-2" />
               <div>{t("p6")}:</div>

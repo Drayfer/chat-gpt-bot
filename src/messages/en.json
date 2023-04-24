@@ -114,7 +114,9 @@
     "p15": "Default",
     "p16": "Your Current Plan",
     "p17": "no",
-    "p18": "Web version"
+    "p18": "Web version",
+    "method": "Payment methods",
+    "payMessage": "Please indicate your email address that you use in GPT AI Chat Bot during payment. Access will be granted within 30-60 minutes."
   },
   "app": {
     "error": "Something went wrong, please ask again later",
