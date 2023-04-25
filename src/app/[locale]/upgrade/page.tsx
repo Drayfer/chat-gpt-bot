@@ -3,7 +3,6 @@ import { CheckCircleOutlined, CrownOutlined } from "@ant-design/icons";
 import { Button, Divider } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Footer from "../login/Footer";
 import useIsPaid from "@/hooks/useIsPaid";
 import moment from "moment";
@@ -19,13 +18,9 @@ export default function Upgrade() {
   const handleUpgrade = async () => {
     if (!session) {
       router.push("/login");
+      return;
     }
-    try {
-      const { data } = await axios("/api/upgrade");
-      if (data.response.checkout_url) {
-        router.push(data.response.checkout_url);
-      }
-    } catch (err) {}
+    window.open("https://donate.stream/yoomoney410011297881154", "_blank");
   };
 
   return (
@@ -50,18 +45,32 @@ export default function Upgrade() {
             </span>
           </div>
         )}
+        {isPaid && (
+          <div className="flex justify-center items-center mb-5 text-lg">
+            {t("p18")}:{" "}
+            <Link
+              className="font-bold underline ml-1"
+              href="http://ai-gpt.icu/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              http://ai-gpt.icu/
+            </Link>
+          </div>
+        )}
+
         <div className="md:flex md:flex-row md:space-x-4 bg-[#202123] lg:mx-40">
           <div className="p-4 md:w-1/2">
             <div className="text-xl font-bold flex justify-between">
-              <div>{isPaid ? "Your Current Plan" : "Pro Plan"}</div>
+              <div>{isPaid ? t("p16") : "Pro Plan"}</div>
               <div className="text-slate-400">10$/{t("p3")}</div>
             </div>
-            <Button
-              className="bg-green-600 hover:bg-green-600/90 w-full mt-4 text-white border-0 font-bold p-5 flex justify-center items-center mb-3"
-              onClick={handleUpgrade}
+            <Link
+              href={"/pay"}
+              className="bg-green-600 hover:bg-green-600/90 w-full mt-4 text-white border-0 font-bold p-2 flex justify-center items-center mb-3 rounded-md"
             >
               {isPaid ? t("p4") : t("p5")}
-            </Button>
+            </Link>
             <div className="flex items-start">
               <CheckCircleOutlined className="text-green-500 pr-2" />
               <div>{t("p6")}:</div>

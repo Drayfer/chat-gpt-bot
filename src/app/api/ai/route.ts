@@ -69,7 +69,9 @@ export async function POST(request: Request) {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${keyData?.openaiKey}`,
+        Authorization: `Bearer ${
+          body.isPaid ? keyData?.openaiKeyPaid : keyData?.openaiKey
+        }`,
       },
       method: "POST",
       body: JSON.stringify({
@@ -96,6 +98,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ answer: answerString }, { status: 200 });
   } catch (err) {
+    console.log(err);
     return NextResponse.json(err, { status: 500 });
   }
 }

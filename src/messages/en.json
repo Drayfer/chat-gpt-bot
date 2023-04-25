@@ -113,10 +113,17 @@
     "p14": "Free Plan",
     "p15": "Default",
     "p16": "Your Current Plan",
-    "p17": "no"
+    "p17": "no",
+    "p18": "Web version",
+    "method": "Payment methods",
+    "payMessage": "Please indicate your email address that you use in GPT AI Chat Bot during payment. Access will be granted within 30-60 minutes.",
+    "mes1": "If the access was not open, write on",
+    "mes2": "or click the button below",
+    "send": "Send a notification",
+    "info": "Notification sent. Wait, please!"
   },
   "app": {
-    "error": "Something went wrong, please ask again",
+    "error": "Something went wrong, please ask again later",
     "generate": "generate",
     "typing": "typing",
     "newChat": "New Chat",
@@ -132,7 +139,9 @@
     "askImage": "Describe in detail what Image you want to generate.",
     "useEng": "Use English language",
     "something": "Ask something",
-    "settings": "Settings"
+    "settings": "Settings",
+    "download": "Download Image",
+    "noWebAccess": "No access to the web version"
   },
   "settings": {
     "back": "Back",

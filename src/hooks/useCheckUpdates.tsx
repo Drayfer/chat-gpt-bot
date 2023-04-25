@@ -6,11 +6,12 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import useIsPaid from "./useIsPaid";
 
-const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
+export const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
 
 export default function useCheckUpdates() {
-  const { versionNative } = useAppSelector((state) => ({
+  const { versionNative, loading } = useAppSelector((state) => ({
     versionNative: state.messages.versionNative,
+    loading: state.messages.loading,
   }));
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -38,6 +39,22 @@ export default function useCheckUpdates() {
       document.removeEventListener("message", handleMessage);
     };
   }, [versionNative, dispatch]);
+
+  const showFullAds = () => {
+    const webViewNotification = {
+      adv: "bannerFull",
+    };
+    if (
+      !loading &&
+      !isPaid &&
+      window.ReactNativeWebView &&
+      window.navigator.userAgent.includes(AGENT)
+    ) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify(webViewNotification)
+      );
+    }
+  };
 
   useEffect(() => {
     if (session) {
@@ -68,7 +85,8 @@ export default function useCheckUpdates() {
       }, 10000);
       return () => clearTimeout(timeoutId);
     }
+    //eslint-disable-next-line
   }, [session, isPaid]);
 
-  return { isUpdate };
+  return { isUpdate, showFullAds };
 }

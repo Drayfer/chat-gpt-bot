@@ -6,6 +6,7 @@ import { Question, UserSession } from "../ai/route";
 import S3 from "aws-sdk/clients/s3";
 import axios from "axios";
 import randomstring from "randomstring";
+import { Configuration, OpenAIApi } from "openai";
 
 const s3 = new S3({
   region: "eu-north-1",
@@ -13,8 +14,6 @@ const s3 = new S3({
   secretAccessKey: process.env.SECRET_KEY,
   signatureVersion: "v4",
 });
-
-import Replicate from "replicate";
 
 export async function POST(request: Request) {
   const body: Question = await request.json();
@@ -26,31 +25,34 @@ export async function POST(request: Request) {
 
     const keyData = await client.settings.findFirst({
       where: {
-        imageKey: {
+        openaiKey: {
           not: "",
         },
       },
     });
-    const replicate = new Replicate({
-      auth: keyData?.imageKey as string,
+    const configuration = new Configuration({
+      apiKey: keyData?.openaiKey,
     });
-    const model =
-      "prompthero/openjourney:9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb";
-    const input = { prompt: `mdjrny-v4 style ${body.question} 8k` };
-    const output = (await replicate.run(model, {
-      input,
-    })) as string[];
-    // const output = [
+    const openai = new OpenAIApi(configuration);
+    const response = await openai.createImage({
+      prompt: body.question,
+      n: 1,
+      size: "512x512",
+      response_format: "url",
+    });
+    const imageUrl = response.data.data[0].url;
+
+    // const imageUrl = [
     //   "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
     // ];
 
-    if (!output[0]?.length) {
+    if (!imageUrl?.length) {
       return NextResponse.json("no length", { status: 500 });
     }
 
     const { data } = await axios({
       method: "get",
-      url: output[0],
+      url: imageUrl,
       responseType: "arraybuffer",
     });
 
@@ -70,7 +72,6 @@ export async function POST(request: Request) {
       },
     });
     const imgUrl = url.split("?")[0];
-
     const user = await client.user.findUnique({
       where: { email },
     });

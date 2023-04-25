@@ -11,7 +11,7 @@ export default function ImageStartDialog() {
         <p className="text-base text-center mt-4 font-light">
           {t("askImage")}.
         </p>
-        <p className="text-base text-center font-light">{t("useEng")}...</p>
+        {/* <p className="text-base text-center font-light">{t("useEng")}...</p> */}
       </div>
     </>
   );
