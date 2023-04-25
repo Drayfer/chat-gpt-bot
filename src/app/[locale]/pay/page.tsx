@@ -27,7 +27,7 @@ export default function Pay() {
         </Link>{" "}
         / {t("upgrade")}
       </div>
-      <div>
+      <div className="text-center">
         <h1 className="text-3xl mb-6 font-bold text-center">{t("method")}</h1>
         <div className="w-[200px] mx-auto">
           <Link
@@ -70,7 +70,7 @@ export default function Pay() {
         ) : (
           session && (
             <div
-              className="flex self-center items-center bg-slate-500 text-white text-sm font-bold px-4 py-3 mt-3 w-auto"
+              className="inline-flex mx-auto items-center bg-slate-500 text-white text-sm font-bold px-4 py-3 mt-3 w-auto"
               role="alert"
             >
               <svg
