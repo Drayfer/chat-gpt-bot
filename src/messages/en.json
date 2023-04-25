@@ -116,7 +116,11 @@
     "p17": "no",
     "p18": "Web version",
     "method": "Payment methods",
-    "payMessage": "Please indicate your email address that you use in GPT AI Chat Bot during payment. Access will be granted within 30-60 minutes."
+    "payMessage": "Please indicate your email address that you use in GPT AI Chat Bot during payment. Access will be granted within 30-60 minutes.",
+    "mes1": "If the access was not open, write on",
+    "mes2": "or click the button below",
+    "send": "Send a notification",
+    "info": "Notification sent. Wait, please!"
   },
   "app": {
     "error": "Something went wrong, please ask again later",
