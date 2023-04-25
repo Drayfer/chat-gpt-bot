@@ -62,7 +62,7 @@ export default function Upgrade() {
         <div className="md:flex md:flex-row md:space-x-4 bg-[#202123] lg:mx-40">
           <div className="p-4 md:w-1/2">
             <div className="text-xl font-bold flex justify-between">
-              <div>{isPaid ? "Your Current Plan" : "Pro Plan"}</div>
+              <div>{isPaid ? t("p16") : "Pro Plan"}</div>
               <div className="text-slate-400">10$/{t("p3")}</div>
             </div>
             <Link
