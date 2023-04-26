@@ -141,7 +141,8 @@
     "something": "Ask something",
     "settings": "Settings",
     "download": "Download Image",
-    "noWebAccess": "No access to the web version"
+    "noWebAccess": "No access to the web version",
+    "example": "Example"
   },
   "settings": {
     "back": "Back",
