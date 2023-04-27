@@ -1,5 +1,6 @@
 "use client";
 import { useAppSelector } from "@/hooks/redux";
+import useIsPaid from "@/hooks/useIsPaid";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useTranslations } from "next-intl";
@@ -12,9 +13,15 @@ export default function ModelHeader({ handleNewChat }: IModelHeader) {
   const { model } = useAppSelector((state) => ({
     model: state.chat.model,
   }));
+  const { isPaid } = useIsPaid();
   const t = useTranslations("app");
 
-  const modelInfo = model === "image" ? "Midjourney" : "gpt-3.5-turbo";
+  const modelInfo =
+    model === "image"
+      ? "Midjourney"
+      : isPaid
+      ? "gpt-3.5-turbo (context)"
+      : "gpt-3.5-turbo";
 
   return (
     <div className="p-2 py-0 border-2 border-white/20 text-white/50 text-xs flex justify-between items-center">
