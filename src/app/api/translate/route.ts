@@ -3,8 +3,6 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { UserSession } from "../ai/route";
-import { Configuration, OpenAIApi } from "openai";
-
 interface IBody {
   text: string;
 }
@@ -22,21 +20,25 @@ export async function POST(request: Request) {
         },
       },
     });
-    const configuration = new Configuration({
-      apiKey: keyData?.openaiKeyPaid,
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${keyData?.openaiKeyPaid}`,
+      },
+      method: "POST",
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: `translate to english text "${body.text}", result in JSON format like {en: "text"}`,
+          },
+        ],
+        temperature: 0.8,
+        max_tokens: 500,
+      }),
     });
-    const openai = new OpenAIApi(configuration);
-    const { data } = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `translate to english text "${body.text}", result in JSON format like {en: "text"}`,
-        },
-      ],
-      temperature: 0.8,
-      max_tokens: 500,
-    });
+    const data = await response.json();
     if (!data.choices[0].message?.content) {
       throw new Error("no answer");
     }

@@ -20,7 +20,6 @@ import { getChatSession } from "@/store/requests/chat";
 import useIsDesktop from "@/hooks/useIsDesktop";
 import { useTranslations } from "next-intl";
 import TranslateSvg from "./TranslateSvg";
-import axios from "axios";
 import { ThreeCircles } from "react-loader-spinner";
 
 interface IInputQuestion extends TextAreaProps {
