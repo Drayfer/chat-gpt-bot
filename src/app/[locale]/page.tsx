@@ -5,7 +5,7 @@ import { Comment, RotatingLines } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
 import AIimg from "./svg/ai.webp";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import InputQuestion from "@/components/input/InputQuestion";
 import EmptyDialog from "./EmptyDialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -322,6 +322,7 @@ export default function Home() {
           <InputQuestion
             value={input}
             onChange={handleInput}
+            setInput={setInput}
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
                 e.preventDefault();
