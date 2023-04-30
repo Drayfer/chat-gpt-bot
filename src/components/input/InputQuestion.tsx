@@ -54,17 +54,16 @@ const InputQuestion = (props: IInputQuestion) => {
     }
     try {
       setIsLoadingTranslate(true);
-      const { data } = await axios.post<ITranslate>(
-        "/api/translate",
-        {
-          text: value,
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        body: JSON.stringify({
+          text: value,
+        }),
+      });
+      const data: ITranslate = await res.json();
       setInput(data.en);
     } catch (err) {
     } finally {
