@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import useIsPaid from "./useIsPaid";
 
 export const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
-export const DAY_COUNT = 15;
+export const DAY_COUNT = 10;
 
 export default function useCheckUpdates() {
   const { versionNative, loading } = useAppSelector((state) => ({
