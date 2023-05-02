@@ -94,7 +94,6 @@ export default function Home() {
           if (!answer) {
             throw new Error();
           }
-          isExceededMessages();
           dispatch(addMessage({ who: "bot", text: answer }));
         })
         .catch((err) => {
@@ -114,6 +113,7 @@ export default function Home() {
         .finally(() => {
           setScroll(true);
           setIsTyping(false);
+          isExceededMessages();
         });
     } else if (model === "image") {
       const modelType = 1;
