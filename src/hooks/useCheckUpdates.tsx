@@ -2,11 +2,13 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { updateVersion } from "@/store/messagesSlice";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import useIsPaid from "./useIsPaid";
 
 export const AGENT = "Chrome/18.0.1025.133 Mobile Safari/535.19";
+export const DAY_COUNT = 15;
 
 export default function useCheckUpdates() {
   const { versionNative, loading } = useAppSelector((state) => ({
@@ -88,5 +90,12 @@ export default function useCheckUpdates() {
     //eslint-disable-next-line
   }, [session, isPaid]);
 
-  return { isUpdate, showFullAds };
+  const isExceededMessages = async () => {
+    const { data } = await axios("/api/daymessages");
+    if (data.count > DAY_COUNT) {
+      showFullAds();
+    }
+  };
+
+  return { isUpdate, showFullAds, isExceededMessages };
 }

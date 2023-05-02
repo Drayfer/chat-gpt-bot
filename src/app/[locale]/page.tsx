@@ -69,7 +69,7 @@ export default function Home() {
     })
   );
   const t = useTranslations("app");
-  const { isUpdate, showFullAds } = useCheckUpdates();
+  const { isUpdate, showFullAds, isExceededMessages } = useCheckUpdates();
   const { isDesktop } = useIsDesktop();
   const { isPaid } = useIsPaid();
   const locale = useLocale();
@@ -94,6 +94,7 @@ export default function Home() {
           if (!answer) {
             throw new Error();
           }
+          isExceededMessages();
           dispatch(addMessage({ who: "bot", text: answer }));
         })
         .catch((err) => {
