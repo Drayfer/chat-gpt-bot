@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       },
     });
     const configuration = new Configuration({
-      apiKey: keyData?.openaiKey,
+      apiKey: keyData?.openaiKeyPaid,
     });
     const openai = new OpenAIApi(configuration);
     const response = await openai.createImage({
