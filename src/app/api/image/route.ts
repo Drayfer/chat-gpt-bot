@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
     const keyData = await client.settings.findFirst({
       where: {
-        openaiKey: {
+        openaiKeyPaid: {
           not: "",
         },
       },
