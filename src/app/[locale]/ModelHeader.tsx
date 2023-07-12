@@ -20,8 +20,8 @@ export default function ModelHeader({ handleNewChat }: IModelHeader) {
     model === "image"
       ? "Midjourney"
       : isPaid
-      ? "gpt-3.5-turbo (context)"
-      : "gpt-3.5-turbo";
+      ? "AI-3.5-turbo (context)"
+      : "AI-3.5-turbo";
 
   return (
     <div className="p-2 py-0 border-2 border-white/20 text-white/50 text-xs flex justify-between items-center">

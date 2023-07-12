@@ -75,7 +75,7 @@ export default function Upgrade() {
               <CheckCircleOutlined className="text-green-500 pr-2" />
               <div>{t("p6")}:</div>
               <div className="font-extrabold ml-2">
-                <div>gpt-3.5-turbo ({t("p7")}),</div>
+                <div>AI-3.5-turbo ({t("p7")}),</div>
                 {/* <div>gpt-4 (in future),</div> */}
                 <div>Midjourney ({t("p8")})</div>
               </div>
@@ -118,7 +118,7 @@ export default function Upgrade() {
             <div className="flex items-center">
               <CheckCircleOutlined className="text-white/50 pr-2" />
               {t("p6")}:{" "}
-              <span className="font-extrabold ml-2">gpt-3.5-turbo</span>
+              <span className="font-extrabold ml-2">AI-3.5-turbo</span>
             </div>
             <div className="flex items-center">
               <CheckCircleOutlined className="text-white/50 pr-2" />
