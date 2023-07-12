@@ -42,7 +42,7 @@ export default function Login() {
 
       <div className="flex justify-start items-center flex-col pt-40 ">
         <Image src={AIimg} width={60} height={60} alt="ai_image" />
-        <div className="text-3xl mb-14 mt-2">GPT AI Chat Bot</div>
+        <div className="text-3xl mb-14 mt-2">AI Chat Assistant</div>
         <button
           className="bg-[#4C82E5] p-3 text-lg rounded-sm flex items-center"
           onClick={(e) => {

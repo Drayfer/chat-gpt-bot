@@ -25,14 +25,14 @@ export default function SelectModel() {
   return (
     <>
       <div className="flex justify-center items-center flex-col h-full">
-        <p className="text-4xl mb-3 font-bold">GPT AI Chat Bot</p>
+        <p className="text-4xl mb-3 font-bold">AI Chat Assistant</p>
         <p className="text-xl mb-3 font-extralight">{t("choose")}:</p>
 
         <div
           className="flex flex-col justify-center items-center bg-slate-500 p-4 mb-4 cursor-pointer w-72"
           onClick={() => handleModel("gpt")}
         >
-          <div className="text-lg font-bold mb-2">Open AI</div>
+          <div className="text-lg font-bold mb-2">AI Chat</div>
           <div className="text-sm font-light text-center">{t("textAi")}</div>
         </div>
 
@@ -50,7 +50,7 @@ export default function SelectModel() {
             Open AI (GPT4)
           </div>
           <div className="text-sm font-light text-center">
-            Last version of GPT AI Chat Bot assistent
+            Last version of AI Chat Assistant assistent
           </div>
         </div> */}
         <div
