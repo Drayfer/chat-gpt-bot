@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import axios from "axios";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { UserSession } from "../ai/route";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
+    const {
+      user: { email },
+    } = (await getServerSession(authOptions)) as UserSession;
     let transporter = nodemailer.createTransport({
       host: "smtp.ukr.net",
       port: 465,
@@ -13,18 +19,18 @@ export async function GET(request: Request) {
         pass: process.env.NODEMAILER_EMAIL_PASSWORD, // generated ethereal password
       },
     });
-    const { data } = await axios(
-      "https://diaka.ua/api/v1/message/stats?action=recent&conveyorHash=ONPBO49zxX4WIxTcjBWAzquR985yD3Rs&params%5Blimit%5D=10&params%5Btest%5D=1"
-    );
+    // const { data } = await axios(
+    //   "https://diaka.ua/api/v1/message/stats?action=recent&conveyorHash=ONPBO49zxX4WIxTcjBWAzquR985yD3Rs&params%5Blimit%5D=10&params%5Btest%5D=1"
+    // );
 
     await transporter.sendMail({
       from: process.env.NODEMAILER_EMAIL, // sender address
       to: "aigptchatbot@gmail.com", // list of receivers
-      subject: "Paid Access!!!", // Subject line
-      text: `Need open access to ${data[0].name} ${JSON.stringify(data)}`,
+      subject: "Check Paid Access!!!", // Subject line
+      text: `Check paid access to ${email}`,
     });
 
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.json({ status: "ok" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(err, { status: 500 });
   }

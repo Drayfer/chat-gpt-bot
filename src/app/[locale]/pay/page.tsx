@@ -6,11 +6,12 @@ import Link from "@/components/Link";
 import { useTranslations } from "next-intl";
 import axios from "axios";
 import { useState } from "react";
-import moment from "moment";
+import { useRouter } from "next/navigation";
 
 export default function Pay() {
   const t = useTranslations("upgrade");
   const { data: session } = useSession();
+  const router = useRouter();
   const [isSend, setIsSent] = useState(false);
 
   const handleSendEmail = async () => {
@@ -19,6 +20,18 @@ export default function Pay() {
       setIsSent(true);
     }
   };
+  const handlePayDiaka = async () => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    await axios("/api/payment");
+    window.open(
+      `https://oleh-mykhailychenko.diaka.ua/donate?amount=370&name=${session?.user?.email}&message=donate`,
+      "_blank"
+    );
+  };
+
   return (
     <div className="text-[#D1D5DA] container mx-auto pt-10 px-4 min-h-screen flex flex-col justify-between">
       <div className="mb-10 text-xl">
@@ -38,18 +51,12 @@ export default function Pay() {
           >
             Donate.Stream
           </Link>
-          <Link
-            href={`https://ai-chat.diaka.ua/donate?amount=370&name=${
-              session?.user?.email
-            }&message=AI%20Chat%20Assistant%20-%20${moment().format(
-              "DD.MM.YYYY HH:mm"
-            )}`}
-            className="block bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded text-center"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            onClick={handlePayDiaka}
+            className="bg-blue-500 hover:bg-blue-400 w-full text-white border-b-4 border-blue-700 hover:border-blue-500 font-bold p-2 py-5 flex justify-center items-center mb-3 rounded-md"
           >
             Diaka
-          </Link>
+          </Button>
         </div>
         <div className="mt-8 text-sm text-center">* {t("payMessage")}</div>
         <div className="mt-2 text-sm text-center">
