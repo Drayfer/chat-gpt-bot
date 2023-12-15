@@ -19,16 +19,15 @@ export async function GET() {
         pass: process.env.NODEMAILER_EMAIL_PASSWORD, // generated ethereal password
       },
     });
-    // const { data } = await axios(
-    //   "https://diaka.ua/api/v1/message/stats?action=recent&conveyorHash=ONPBO49zxX4WIxTcjBWAzquR985yD3Rs&params%5Blimit%5D=10&params%5Btest%5D=1"
-    // );
-
-    await transporter.sendMail({
-      from: process.env.NODEMAILER_EMAIL, // sender address
-      to: "aigptchatbot@gmail.com", // list of receivers
-      subject: "Check Paid Access!!!", // Subject line
-      text: `Check paid access to ${email}`,
-    });
+     const { data } = await axios(
+       "https://diaka.ua/api/v1/message/stats?action=recent&conveyorHash=ledVV43_827rc2Wroo7NLOs5tJrdfnja&params%5Blimit%5D=10&params%5Btest%5D=1"
+     );
+     await transporter.sendMail({
+       from: process.env.NODEMAILER_EMAIL, // sender address
+       to: "aigptchatbot@gmail.com", // list of receivers
+       subject: "Check Paid Access!!!", // Subject line
+       text: `Check paid access to ${email} \n ${JSON.stringify(data)}`,
+     });
 
     return NextResponse.json({ status: "ok" }, { status: 200 });
   } catch (err) {
