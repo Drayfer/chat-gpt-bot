@@ -50,11 +50,11 @@ export default function Upgrade() {
             {t("p18")}:{" "}
             <Link
               className="font-bold underline ml-1"
-              href="http://ai-gpt.icu/"
+              href="http://ai-chat.icu/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              http://ai-gpt.icu/
+              http://ai-chat.icu/
             </Link>
           </div>
         )}

@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   return NextResponse.json(
     {
       response: {
-        checkout_url: "https://ai-gpt.icu/",
+        checkout_url: "https://ai-chat.icu/",
       },
     },
     { status: 200 }
