@@ -5,9 +5,6 @@ const withNextIntl = require("next-intl/plugin")(
 );
 
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   env: {
     NEED_UPDATE: process.env.NEED_UPDATE,
     VERSION: process.env.VERSION,

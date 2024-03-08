@@ -50,7 +50,7 @@ const askAi = async (
 };
 
 const askImage = async (text: string, chatSession: number, model: number) => {
-  return await fetch("/api/image", {
+  return await fetch("/api/image-new", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

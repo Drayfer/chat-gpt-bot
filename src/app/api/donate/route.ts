@@ -10,7 +10,6 @@ interface IBody {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log(111, body);
     return NextResponse.json(
       { data: "ok" },
       {

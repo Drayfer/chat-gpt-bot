@@ -3,10 +3,9 @@ import { Button } from "antd";
 import NextImage from "next/image";
 import { RefObject, Suspense, useState } from "react";
 import EmptyImage from "./images/empty-image.png";
-import { saveAs } from "file-saver";
 import { RotatingLines } from "react-loader-spinner";
 import { useTranslations } from "next-intl";
-import Link from "@/components/Link";
+import { downloadImage } from "@/app/helpers";
 
 export interface IBotImageMessage {
   link: string;
@@ -17,11 +16,6 @@ export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
   const t = useTranslations("app");
   const [isValidImage, setIsValidImage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const saveFile = (fileString: string) => {
-    const id = Date.now().toString();
-    saveAs(fileString, `Image(${id.substring(id.length - 4)}).png`);
-  };
 
   const img: HTMLImageElement = new Image();
   img.onload = function () {
@@ -78,20 +72,12 @@ export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
               alt="generated_image"
             />
 
-            {/* <Button
-              className="mt-3 text-white/70"
-              onClick={() => saveFile(link)}
-            > */}
-            <Link
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Button
+              onClick={() => downloadImage(link, "ai_generated_image.png")}
               className="mt-3 text-white/70 underline"
             >
               {t("download")}
-            </Link>
-
-            {/* </Button> */}
+            </Button>
           </>
         ) : (
           <NextImage
