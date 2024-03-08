@@ -7,21 +7,7 @@ import axios from "axios";
 import randomstring from "randomstring";
 import { Configuration, OpenAIApi } from "openai";
 import { google } from "googleapis";
-import { getBase64Image } from "../history/[id]/route";
-
-const { CLIENT_EMAIL, PRIVATE_KEY, FOLDER_ID } = process.env;
-const SCOPE = ["https://www.googleapis.com/auth/drive"];
-
-export const authorize = async () => {
-  const jwtClient = new google.auth.JWT(
-    CLIENT_EMAIL,
-    "",
-    (PRIVATE_KEY as string).split(String.raw`\n`).join("\n"),
-    SCOPE
-  );
-  await jwtClient.authorize();
-  return jwtClient;
-};
+import { authorize, getBase64Image } from "@/app/helpers";
 
 export async function POST(request: Request) {
   const body: Question = await request.json();
@@ -63,12 +49,12 @@ export async function POST(request: Request) {
 
     const fileMetaData = {
       name: `${email}_${randomstring.generate()}.png`,
-      parents: [FOLDER_ID] as string[],
+      parents: [process.env.FOLDER_ID] as string[],
     };
 
     const { data } = await axios.get(imageUrl, { responseType: "stream" });
     const driveData = await drive.files.create({
-      resource: fileMetaData,
+      requestBody: fileMetaData,
       media: {
         body: data,
         mimeType: "image/png",

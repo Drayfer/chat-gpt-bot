@@ -3,8 +3,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { UserSession } from "../../ai/route";
-import { authorize } from "../../image-new/route";
-import { google } from "googleapis";
+import { getBase64Image } from "@/app/helpers";
 
 interface IParams {
   params: {
@@ -12,43 +11,6 @@ interface IParams {
   };
 }
 
-export const getBase64Image = async (fileId: string) => {
-  const drive = await google.drive({ version: "v3", auth: await authorize() });
-  try {
-    const dataURI = await new Promise((resolve, reject) => {
-      drive.files.get(
-        {
-          fileId: fileId,
-          alt: "media",
-        },
-        {
-          responseType: "arraybuffer",
-        },
-        function (err, response) {
-          if (err) {
-            reject(err);
-          } else {
-            if (!response) {
-              reject("no data");
-              return;
-            }
-            const imageType = response.headers["content-type"];
-            const base64 = Buffer.from(
-              response.data as WithImplicitCoercion<string>,
-              "utf8"
-            ).toString("base64");
-            const dataURI = "data:" + imageType + ";base64," + base64;
-            resolve(dataURI);
-          }
-        }
-      );
-    });
-
-    return dataURI;
-  } catch (err) {
-    return err;
-  }
-};
 
 export async function GET(request: Request, { params }: IParams) {
   const {

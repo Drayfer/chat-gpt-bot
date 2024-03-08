@@ -5,12 +5,18 @@ import { RefObject, Suspense, useState } from "react";
 import EmptyImage from "./images/empty-image.png";
 import { RotatingLines } from "react-loader-spinner";
 import { useTranslations } from "next-intl";
-import { downloadImage } from "@/app/helpers";
 
 export interface IBotImageMessage {
   link: string;
   chatRef: RefObject<HTMLDivElement>;
 }
+
+const downloadImage = (base64String: string, fileName: string) => {
+  const a = document.createElement("a");
+  a.href = base64String;
+  a.download = fileName;
+  a.click();
+};
 
 export default function BotImageMessage({ link, chatRef }: IBotImageMessage) {
   const t = useTranslations("app");
